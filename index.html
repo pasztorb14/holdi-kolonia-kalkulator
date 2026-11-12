@@ -465,7 +465,7 @@ button.cargo-src.as-btn{background:none;border:0;border-bottom:1px solid transpa
   .comp-bar{height:9px}
 }
 
-/* HUD theme v0.8.3 — Pixflow-inspired spacecraft interface.
+/* HUD theme v0.8.4 — Pixflow-inspired spacecraft interface.
    UI font: Barlow Condensed (SIL OFL 1.1). Readouts: Share Tech Mono (SIL OFL 1.1).
    Palette 4: Arctic cyan-white (#bff4ff accent / #7ee0f2 secondary).
    License files live in /fonts next to this source. */
@@ -779,16 +779,11 @@ header .tag{
   min-height:640px;
 }
 #globeWrap::before{
-  /* faint technical grid, weaker than before */
-  background-image:
-    linear-gradient(rgba(210,220,230,.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(210,220,230,.06) 1px, transparent 1px);
-  background-size:48px 48px;
-  background-position:center center;
-  opacity:.85;
-  mask-image:radial-gradient(circle at 50% 52%, transparent 28%, #000 62%);
-  -webkit-mask-image:radial-gradient(circle at 50% 52%, transparent 28%, #000 62%);
+  /* v0.8.4: square grid behind the globe removed (also clears style.css ::before). */
+  content:none;
+  display:none;
 }
+.hud-rings{display:none !important}
 #globeWrap .scan{
   background:repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.1) 4px);
   opacity:.28; animation:none;
@@ -1298,23 +1293,8 @@ a:hover{text-decoration-color:var(--accent-2)}
     background:
       radial-gradient(ellipse at 50% 52%, #14181d 0%, #080a0c 68%);
   }
-  #globeStage::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    pointer-events:none;
-    z-index:2;
-    background-image:
-      linear-gradient(rgba(210,220,230,.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(210,220,230,.06) 1px, transparent 1px);
-    background-size:48px 48px;
-    background-position:center center;
-    opacity:.85;
-    mask-image:radial-gradient(circle at 50% 52%, transparent 28%, #000 62%);
-    -webkit-mask-image:radial-gradient(circle at 50% 52%, transparent 28%, #000 62%);
-  }
+  #globeStage::before{content:none; display:none}
 
-  .hud-rings svg{height:88%; max-width:88%; max-height:88%}
   .hud-finder{inset:10px}
   .hud-finder b{width:20px;height:20px}
 
@@ -1583,7 +1563,7 @@ a:hover{text-decoration-color:var(--accent-2)}
 </style>
 </head><body>
 <header>
- <div class="brand"><h1 data-i18n="h1" data-i18n-html>Kis Lépés – Új határok a Holdon</h1><div class="tag" data-i18n="tag">Holdi kolónia-kalkulátor · v0.8.3 · forrásolt becslés, nem mérnöki terv</div></div>
+ <div class="brand"><h1 data-i18n="h1" data-i18n-html>Kis Lépés – Új határok a Holdon</h1><div class="tag" data-i18n="tag">Holdi kolónia-kalkulátor · v0.8.4 · forrásolt becslés, nem mérnöki terv</div></div>
  <div class="clock" id="clockBox">
   <span class="led" id="clockLive" data-i18n-title="clockLive" title="Élő idő"></span>
   <label class="sr" for="datePick" data-i18n="dateLbl">Időpont</label>
@@ -1767,7 +1747,7 @@ a:hover{text-decoration-color:var(--accent-2)}
  </aside>
 </div>
 
-<footer><span data-i18n="footerL">Holdi kolónia-kalkulátor · v0.8.3 · Pásztor Bence számára</span><span data-i18n="footerR">Felszíni adatok: NASA/GSFC/ASU, LRO</span></footer>
+<footer><span data-i18n="footerL">Holdi kolónia-kalkulátor · v0.8.4 · Pásztor Bence számára</span><span data-i18n="footerR">Felszíni adatok: NASA/GSFC/ASU, LRO</span></footer>
 <div id="tip"></div>
 <div id="ksTip" hidden role="tooltip"></div>
 <div id="mBar"><div class="mBarMain"><div id="mBarTxt"></div><div id="mBarCargo" hidden></div></div><button type="button" id="mBarBtn" data-i18n="mBarBtn">Részletek ↓</button></div>
@@ -3249,8 +3229,8 @@ function setLang(lang, opts){
 // ---------- UI STRINGS ----------
 _i("title", "Kis Lépés – Új határok a Holdon · Holdi kolónia-kalkulátor", "Small Step – Lunar Frontier · Lunar Colony Calculator");
 _i("h1", "Kis Lépés – Új határok a Holdon", "Small Step – Lunar Frontier");
-_i("tag", "Holdi kolónia-kalkulátor · v0.8.3 · forrásolt becslés, nem mérnöki terv", "Lunar Colony Calculator · v0.8.3 · sourced estimate, not an engineering design");
-_i("footerL", "Holdi kolónia-kalkulátor · v0.8.3 · Pásztor Bence számára", "Lunar Colony Calculator · v0.8.3 · for Pásztor Bence");
+_i("tag", "Holdi kolónia-kalkulátor · v0.8.4 · forrásolt becslés, nem mérnöki terv", "Lunar Colony Calculator · v0.8.4 · sourced estimate, not an engineering design");
+_i("footerL", "Holdi kolónia-kalkulátor · v0.8.4 · Pásztor Bence számára", "Lunar Colony Calculator · v0.8.4 · for Pásztor Bence");
 _i("footerR", "Felszíni adatok: NASA/GSFC/ASU, LRO", "Surface data: NASA/GSFC/ASU, LRO");
 _i("srcBtn", "Források", "Sources");
 _i("srcH", "Források", "Sources");
@@ -10992,7 +10972,7 @@ function cargoInit(){
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", cargoInit);
 else cargoInit();
 </script>
-<script>/* HUD chrome v0.8.3 — rings, viewfinder, screen brackets, button press flash, mobile sky collapse. */
+<script>/* HUD chrome v0.8.4 — viewfinder, screen brackets, button press flash, mobile sky collapse. Rings removed. */
 (function(){
   const $ = (s, r=document) => r.querySelector(s);
   const reduce = () => !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
@@ -11081,10 +11061,9 @@ else cargoInit();
 
     const wrap = $("#globeWrap");
     const host = $("#globeStage") || wrap;
-    if(host && !document.querySelector(".hud-rings")){
-      const rings=el(`<div class="hud-rings" aria-hidden="true"></div>`);
-      rings.innerHTML = ringsSVG();
-      host.appendChild(rings);
+    /* v0.8.4: no scale rings / tick circles around the Moon. Keep the stage
+       corner-bracket viewfinder. */
+    if(host && !host.querySelector(".hud-finder") && !document.querySelector(".hud-finder")){
       const finder=el(`<div class="hud-finder" aria-hidden="true">
         <b></b><b></b><b></b><b></b>
         <em class="t"></em><em class="b"></em><em class="l"></em><em class="r"></em>
