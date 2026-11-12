@@ -478,7 +478,7 @@ button.cargo-src.as-btn{background:none;border:0;border-bottom:1px solid transpa
  </div>
 </header>
 <div id="kStrip" data-i18n-aria="ksAria" aria-label="Fő eredmények">
- <div class="ks" data-ks="mass"><b id="ksMass">—</b><div class="ks-sub" id="ksCargo" hidden></div><span data-i18n="ksMass">Földről felviendő</span></div>
+ <div class="ks" data-ks="mass"><b id="ksMass">—</b><div class="ks-sub" id="ksCargo" hidden></div><span data-i18n="ksMass">Földről szállítandó</span></div>
  <div class="ks" data-ks="power"><b id="ksPower">—</b><div class="ks-sub" id="ksCargoPwr" hidden></div><span data-i18n="ksPower">Elektromos igény</span></div>
  <div class="ks" data-ks="reg"><b id="ksReg">—</b><span data-i18n="ksReg">Regolit évente</span></div>
  <div class="ks meta" data-ks="meta" id="ksMetaBox"><div id="ksMeta"></div><div class="ks-ld" id="ksLander" hidden></div></div>
@@ -2127,7 +2127,7 @@ _i("heatTAria", "Eltolás a választott időponthoz képest, órában", "Offset 
 _i("offLive", "élő", "live");
 _i("offZero", "±0 nap", "±0 days");
 _i("ksAria", "Fő eredmények", "Key results");
-_i("ksMass", "Földről felviendő", "Earth-delivered mass");
+_i("ksMass", "Földről szállítandó", "Earth-delivered mass");
 _i("ksPower", "Elektromos igény", "Electrical demand");
 _i("ksReg", "Regolit évente", "Regolith per year");
 _i("gLoad", "NASA holdtérkép betöltése…", "Loading the NASA lunar map…");
@@ -2923,7 +2923,7 @@ _i("ksCargoPwrBoth", (d, g) => `+ ${d} igény · ${g} termelés`,
 _i("ksLanderCap", (cap, name) => `Leszállóegység-kapacitás: ${cap}`,
                 (cap, name) => `Lander capacity: ${cap}`);
 
-_i("ksTipMassH", "Földről felviendő tömeg", "Earth-delivered mass");
+_i("ksTipMassH", "Földről szállítandó tömeg", "Earth-delivered mass");
 _i("ksTipPowerH", "Elektromos igény", "Electrical demand");
 _i("ksTipRegH", "Regolit évente", "Regolith per year");
 _i("ksTipMetaH", "Létszám, idő, helyszín", "Crew, duration and site");
@@ -2931,7 +2931,7 @@ _i("ksTipCargoH", "Saját rakomány", "Own cargo");
 _i("ksTipCargoPwrH", "Saját rakomány: teljesítmény", "Own cargo: power");
 
 _i("ksTipMass", (tot, ye, yrs, ot, food, o2, w, pwr, cab, mreLine) => LANG==="hu"
-    ? `A modell szerinti, Földről felviendő tömeg a teljes küldetésre: ${tot} t.\n\n= éves fogyóeszköz × évek + egyszeri tömeg\n= ${ye} t/év × ${yrs} év + ${ot} t.\n\nA fogyóeszköz a Földről jövő élelem (${food} t/év), oxigén (${o2} t/év) és pótvíz (${w} t/év). Az egyszeri tömeg az erőműveké (${pwr} t) és a kábelhálózaté (${cab} t)${mreLine}.\n\nNincs benne az élőhely, a roverek, a tároló, az energiatároló, a kotrógépek és (az MRE kivételével) az ISRU-üzem tömege.`
+    ? `A modell szerinti, Földről szállítandó tömeg a teljes küldetésre: ${tot} t.\n\n= éves fogyóeszköz × évek + egyszeri tömeg\n= ${ye} t/év × ${yrs} év + ${ot} t.\n\nA fogyóeszköz a Földről jövő élelem (${food} t/év), oxigén (${o2} t/év) és pótvíz (${w} t/év). Az egyszeri tömeg az erőműveké (${pwr} t) és a kábelhálózaté (${cab} t)${mreLine}.\n\nNincs benne az élőhely, a roverek, a tároló, az energiatároló, a kotrógépek és (az MRE kivételével) az ISRU-üzem tömege.`
     : `Earth-delivered mass for the whole mission, according to the model: ${tot} t.\n\n= annual consumables × years + one-time mass\n= ${ye} t/yr × ${yrs} yr + ${ot} t.\n\nConsumables are food from Earth (${food} t/yr), oxygen (${o2} t/yr) and makeup water (${w} t/yr). One-time mass is the power plants (${pwr} t) and the cable network (${cab} t)${mreLine}.\n\nNot included: habitat, rovers, storage, energy storage, excavators, and (except for MRE) ISRU plant mass.`,
     (tot, ye, yrs, ot, food, o2, w, pwr, cab, mreLine) =>
       `Earth-delivered mass for the whole mission, according to the model: ${tot} t.\n\n= annual consumables × years + one-time mass\n= ${ye} t/yr × ${yrs} yr + ${ot} t.\n\nConsumables are food from Earth (${food} t/yr), oxygen (${o2} t/yr) and makeup water (${w} t/yr). One-time mass is the power plants (${pwr} t) and the cable network (${cab} t)${mreLine}.\n\nNot included: habitat, rovers, storage, energy storage, excavators, and (except for MRE) ISRU plant mass.`);
