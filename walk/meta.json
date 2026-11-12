@@ -1,0 +1,46 @@
+{
+  "source": "LRO LOLA 5 m/px south-polar DEM mosaic (ldem_87s_5mpp), Barker et al. 2021, NASA PGDA",
+  "url": "https://pgda.gsfc.nasa.gov/products/81",
+  "product_url": "https://pgda.gsfc.nasa.gov/data/LOLA_5mpp/87S/ldem_87s_5mpp.tif",
+  "citation": "Barker et al., 2021, Planetary & Space Science 203, 105119, doi:10.1016/j.pss.2020.105119",
+  "lola_resolution_m": 5,
+  "grid": 256,
+  "extent_m": 400.0,
+  "walkable_m": 300,
+  "cell_m": 1.5686274509803921,
+  "requested_center": {
+    "lat": -89.684,
+    "lon": -163.261,
+    "name_en": "Connecting Ridge (Shackleton\u2013de Gerlache)",
+    "name_hu": "\u00d6sszek\u00f6t\u0151 gerinc (Shackleton\u2013de Gerlache)"
+  },
+  "crop_center": {
+    "lat": -89.68397987149147,
+    "lon": -163.2764166222713,
+    "x_m": -2757.5,
+    "y_m": -9177.5,
+    "col": 19448,
+    "row": 21835
+  },
+  "lola_window": {
+    "col0": 19408,
+    "row0": 21795,
+    "n": 81,
+    "scale_m": 5
+  },
+  "crs": "South polar stereographic, MOON_ME / DE421, R=1737400 m, lat_0=-90, lon_0=0, k0=1. x=rho*sin(lon), y=rho*cos(lon), rho=2R tan(pi/4+lat/2).",
+  "z_lola_min": 1635.9814453125,
+  "z_lola_max": 1730.4278564453125,
+  "z_lola_center": 1727.14111328125,
+  "z_min": 1635.9814453125,
+  "z_max": 1730.4278564453125,
+  "z_center": 1727.14111328125,
+  "format": "heightmap.bin: 256x256 Float32 little-endian, row-major, row 0 = north, col 0 = west, values = surface height Z in metres (MOON_ME). heightmap_lola.bin is the same grid without procedural craters.",
+  "craters": {
+    "n": 2160,
+    "sfd": "N(>D)=0.0035*(D/m)^(-2.7) per m^2, D=0.6\u20138 m (Neukum-like small-crater SFD); bowl d/D=0.08\u20130.20 by freshness",
+    "note": "Added on top of LOLA; not measured. LOLA already contains relief at \u22655\u201310 m."
+  },
+  "validation_site01_peak_z": 1959.05078125,
+  "plane_order": "BE"
+}
