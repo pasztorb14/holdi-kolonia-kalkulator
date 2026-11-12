@@ -531,7 +531,6 @@ button.cargo-src.as-btn{background:none;border:0;border-bottom:1px solid transpa
    <div id="polar"><div class="ttl" data-i18n="polarTtl">Déli sarkvidék, 80° D-ig · LOLA domborzat, sztereografikus</div><img id="polarImg" data-i18n-alt="polarAlt" alt="Déli sarkvidék"><svg id="polarSvg" viewBox="0 0 700 700"></svg></div>
    <div class="overlay" id="gRead" data-i18n="gReadHintMouse">Mutass a Holdra a koordinátákért.</div>
    <div class="overlay" id="gCredit" data-i18n="gCredit">Felszín: NASA SVS CGI Moon Kit, LRO LROC WAC + LOLA (1737,4 km sugár). Déli sapka: LOLA 80 m/pixel (NASA PGDA). Hőréteg: számított modell. Adatrétegek: Lunar Prospector, LOLA, M3. Nap és Föld: Meeus-efemerisz. Közeli oldal a Föld felé, 0° hosszúság.</div>
-   <div id="gBig">01</div>
   </div>
  </main>
 
@@ -8041,7 +8040,7 @@ const showLabel = s => ["apollo","mare"].includes(s.c) || s.id==="sp";
 SITES.forEach((s,i)=>{ const d=document.createElement("div"); d.className=`mk c-${s.c}`+(showLabel(s)?"":" nolabel");
   d.innerHTML=`<b class="hit"></b><i></i><div class="ln"></div><span><em>${String(i+1).padStart(2,"0")}</em>${siteName(s)}</span>`;
   d.addEventListener("click",e=>{e.stopPropagation(); controls.autoRotate=false; selectSite(s.id,true);}); labels.appendChild(d); MK[s.id]={el:d, s, p:ll2v(s.lat,s.lon,1.002)}; });
-function updateMarkers(){ Object.values(MK).forEach(m=>m.el.classList.toggle("sel", m.s.id===S.site)); const idx=SITES.findIndex(s=>s.id===S.site); $("#gBig").textContent=String(idx+1).padStart(2,"0"); drawPolar(); }
+function updateMarkers(){ Object.values(MK).forEach(m=>m.el.classList.toggle("sel", m.s.id===S.site)); const idx=SITES.findIndex(s=>s.id===S.site); ($("#gBig")||{}).textContent=String(idx+1).padStart(2,"0"); drawPolar(); }
 const tmp = new THREE.Vector3();
 function placeMarkers(){
   const w=wrap.clientWidth, h=wrap.clientHeight, cp=camera.position;
