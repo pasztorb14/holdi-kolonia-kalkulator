@@ -1,4 +1,4 @@
-Háttérzene a holdi kolóniakalkulátorhoz (v0.5.1).
+Háttérzene a holdi kolónia-kalkulátorhoz (v0.5.1).
 Mindhárom szám Creative Commons CC0 1.0 (közkincs):
 https://creativecommons.org/publicdomain/zero/1.0/
 
