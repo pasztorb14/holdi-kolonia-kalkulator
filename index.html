@@ -1442,7 +1442,7 @@ a:hover{text-decoration-color:var(--accent-2)}
    readable. #gMenuBtn stays position:absolute — do not set it relative. */
 .btn, .seg button, .cargo-tab, .cargo-use, .cargo-add, .cargo-rm, .cargo-chip,
 #fsBtn, #sfxBtn, #musBtn, #srcBtn, #dateNow, #heatPlay, #mBar button,
-.cat>summary, .acc>summary{
+.cat>summary, .acc>summary, .walk-btn, #walkOpen{
   position:relative;
   transition:background-color .28s ease, color .28s ease, border-color .28s ease, filter .32s ease, transform .12s ease;
 }
@@ -1453,12 +1453,12 @@ a:hover{text-decoration-color:var(--accent-2)}
 .cargo-add.is-press, .cargo-rm.is-press, .cargo-chip.is-press,
 #fsBtn.is-press, #sfxBtn.is-press, #musBtn.is-press, #srcBtn.is-press,
 #dateNow.is-press, #heatPlay.is-press, #gMenuBtn.is-press, #mBar button.is-press,
-.cat>summary.is-press, .acc>summary.is-press,
+.cat>summary.is-press, .acc>summary.is-press, .walk-btn.is-press, #walkOpen.is-press,
 .btn:active, .seg button:active, .cargo-tab:active, .cargo-use:active,
 .cargo-add:active, .cargo-rm:active, .cargo-chip:active,
 #fsBtn:active, #sfxBtn:active, #musBtn:active, #srcBtn:active,
 #dateNow:active, #heatPlay:active, #gMenuBtn:active, #mBar button:active,
-.cat>summary:active, .acc>summary:active{
+.cat>summary:active, .acc>summary:active, .walk-btn:active, #walkOpen:active{
   /* Snap on (no transition) so the flash is immediate; fade is the base transition once the class drops. */
   transition:none;
   background-color:#bff4ff !important;
@@ -1475,9 +1475,9 @@ a:hover{text-decoration-color:var(--accent-2)}
 /* Already-filled Arctic controls still need a visible blink — go near-white. */
 .btn.on.is-press, .btn[aria-pressed="true"].is-press,
 .seg button.on.is-press, .cargo-tab.on.is-press, .cargo-use.on.is-press,
-#fsBtn.on.is-press, #sfxBtn.on.is-press, #musBtn.on.is-press,
+#fsBtn.on.is-press, #sfxBtn.on.is-press, #musBtn.on.is-press, .walk-btn.is-press,
 .btn.on:active, .seg button.on:active, .cargo-tab.on:active, .cargo-use.on:active,
-#fsBtn.on:active, #sfxBtn.on:active, #musBtn.on:active{
+#fsBtn.on:active, #sfxBtn.on:active, #musBtn.on:active, .walk-btn:active{
   background-color:#eefcff !important;
   color:#071014 !important;
   filter:
@@ -1544,7 +1544,7 @@ a:hover{text-decoration-color:var(--accent-2)}
   .press-sweep{display:none !important; animation:none !important}
   .btn, .seg button, .cargo-tab, .cargo-use, .cargo-add, .cargo-rm, .cargo-chip,
   #fsBtn, #sfxBtn, #musBtn, #srcBtn, #dateNow, #heatPlay, #mBar button,
-  .cat>summary, .acc>summary{
+  .cat>summary, .acc>summary, .walk-btn, #walkOpen{
     transition:background-color .1s ease, color .1s ease, border-color .1s ease, filter .12s ease;
   }
   .is-press, .is-press-reduce,
@@ -1552,7 +1552,7 @@ a:hover{text-decoration-color:var(--accent-2)}
   .cargo-add:active, .cargo-rm:active,
   #fsBtn:active, #sfxBtn:active, #musBtn:active, #srcBtn:active,
   #dateNow:active, #heatPlay:active, #gMenuBtn:active, #mBar button:active,
-  .cat>summary:active, .acc>summary:active{
+  .cat>summary:active, .acc>summary:active, .walk-btn:active, #walkOpen:active{
     transform:none;
     filter:drop-shadow(0 0 8px rgba(191,244,255,.8));
     background-color:#bff4ff !important;
@@ -1571,39 +1571,46 @@ a:hover{text-decoration-color:var(--accent-2)}
   .cargo-use{ max-width: calc(126px * var(--fs)); }
 }
 
-/* v0.9.1 first-person walk — Arctic HUD, does not alter the rest of the page */
+/* v0.9.2 first-person walk — Arctic HUD, does not alter the rest of the page */
+/* Standalone launcher at the end of #console, below all numbered sections. */
 .walk-launch{
-  margin: 14px 0 4px;
-  padding: 12px 12px 10px;
-  background: color-mix(in srgb, var(--panel, #14181e) 88%, #0a2a33);
-  clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cyan, #7ee0f2) 35%, transparent);
+  position: relative;
+  z-index: 2;
+  margin: 22px -4px 8px;
+  padding: 16px 14px 14px;
+  background: color-mix(in srgb, #0a1218 86%, #0d3a44);
+  clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--cyan, #7ee0f2) 55%, transparent),
+    0 -12px 24px rgba(4, 10, 14, 0.85);
 }
 .walk-launch h3{
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   font-family: "Barlow Condensed", sans-serif;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-size: calc(15px * var(--fs, 1));
+  font-size: calc(17px * var(--fs, 1));
   color: var(--cyan, #7ee0f2);
 }
 .walk-btn{
+  position: relative;
   display: block;
   width: 100%;
   font-family: "Barlow Condensed", sans-serif;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  font-size: calc(16px * var(--fs, 1));
-  padding: 10px 14px;
+  font-size: calc(20px * var(--fs, 1));
+  padding: 14px 18px;
   color: #061016;
-  background: linear-gradient(180deg, #d8fbff, #7ee0f2);
+  background: linear-gradient(180deg, #e8fdff, #7ee0f2 55%, #5ec8dc);
   border: 0;
   cursor: pointer;
-  clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+  clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+  box-shadow: 0 0 18px rgba(126, 224, 242, 0.35);
 }
-.walk-btn:hover{ filter: brightness(1.08); }
+.walk-btn:hover{ filter: brightness(1.1); }
 .walk-launch .hint{
   margin: 8px 0 0;
   font-size: calc(11.5px * var(--fs, 1));
@@ -1858,10 +1865,18 @@ body.walk-mobile #walkTime{
 body.walk-mobile #walkTime button{ font-size: 11px; padding: 3px 5px; }
 body.walk-mobile #walkTimeLbl{ min-width: 0; padding: 0 4px; font-size: 11px; }
 body.walk-mobile #walkHUD{ top: 40px; }
+
+@media (max-width: 860px){
+  .walk-launch{
+    margin: 22px 0 16px;
+    scroll-margin-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  }
+  .walk-btn{ font-size: calc(18px * var(--fs, 1)); padding: 13px 16px; }
+}
 </style>
 </head><body>
 <header>
- <div class="brand"><h1 data-i18n="h1" data-i18n-html>SmallStep – Új határok a Holdon</h1><div class="tag" data-i18n="tag">Holdi kolónia-kalkulátor · v0.9.1 · forrásolt becslés, nem mérnöki terv</div></div>
+ <div class="brand"><h1 data-i18n="h1" data-i18n-html>SmallStep – Új határok a Holdon</h1><div class="tag" data-i18n="tag">Holdi kolónia-kalkulátor · v0.9.2 · forrásolt becslés, nem mérnöki terv</div></div>
  <div class="clock" id="clockBox">
   <span class="led" id="clockLive" data-i18n-title="clockLive" title="Élő idő"></span>
   <label class="sr" for="datePick" data-i18n="dateLbl">Időpont</label>
@@ -2040,17 +2055,17 @@ body.walk-mobile #walkHUD{ top: 40px; }
     <div class="cargo-tabs" id="cargoTabs" role="tablist"></div>
     <div class="cargo-stick" id="cargoStick"></div>
     <div class="cargo-list" id="cargoList"></div>
-    <div class="walk-launch" id="walkLaunch">
-     <h3 id="walkLaunchH" data-i18n="walkTitle">Séta a bázison</h3>
-     <button type="button" class="walk-btn" id="walkOpen" data-i18n="walkTitle">Séta a bázison</button>
-     <p class="hint" id="walkLaunchHint" data-i18n="walkLaunchHint">Nyiss egy 1:1 léptékű, első személyű 3D nézetet az Összekötő gerincen (déli sarkvidék). A kijelölt rakomány a kiindulópont mellé kerül.</p>
-    </div>
    </div>
   </details>
+  <div class="walk-launch" id="walkLaunch">
+   <h3 id="walkLaunchH" data-i18n="walkTitle">Séta a bázison</h3>
+   <button type="button" class="walk-btn" id="walkOpen" data-i18n="walkTitle">Séta a bázison</button>
+   <p class="hint" id="walkLaunchHint" data-i18n="walkLaunchHint">Nyiss egy 1:1 léptékű, első személyű 3D nézetet az Összekötő gerincen (déli sarkvidék). A kijelölt rakomány a kiindulópont mellé kerül.</p>
+  </div>
  </aside>
 </div>
 
-<footer><span data-i18n="footerL">Holdi kolónia-kalkulátor · v0.9.1 · Shepherd Invest Kft.</span><span data-i18n="footerR">Felszíni adatok: NASA/GSFC/ASU, LRO</span></footer>
+<footer><span data-i18n="footerL">Holdi kolónia-kalkulátor · v0.9.2 · Shepherd Invest Kft.</span><span data-i18n="footerR">Felszíni adatok: NASA/GSFC/ASU, LRO</span></footer>
 <div id="tip"></div>
 <div id="ksTip" hidden role="tooltip"></div>
 <div id="mBar"><div class="mBarMain"><div id="mBarTxt"></div><div id="mBarCargo" hidden></div></div><button type="button" id="mBarBtn" data-i18n="mBarBtn">Részletek ↓</button></div>
@@ -3551,8 +3566,8 @@ function setLang(lang, opts){
 // ---------- UI STRINGS ----------
 _i("title", "SmallStep – Új határok a Holdon · Holdi kolónia-kalkulátor", "SmallStep – Lunar Frontier · Lunar Colony Calculator");
 _i("h1", "SmallStep – Új határok a Holdon", "SmallStep – Lunar Frontier");
-_i("tag", "Holdi kolónia-kalkulátor · v0.9.1 · forrásolt becslés, nem mérnöki terv", "Lunar Colony Calculator · v0.9.1 · sourced estimate, not an engineering design");
-_i("footerL", "Holdi kolónia-kalkulátor · v0.9.1 · Shepherd Invest Kft.", "Lunar Colony Calculator · v0.9.1 · Shepherd Invest Kft.");
+_i("tag", "Holdi kolónia-kalkulátor · v0.9.2 · forrásolt becslés, nem mérnöki terv", "Lunar Colony Calculator · v0.9.2 · sourced estimate, not an engineering design");
+_i("footerL", "Holdi kolónia-kalkulátor · v0.9.2 · Shepherd Invest Kft.", "Lunar Colony Calculator · v0.9.2 · Shepherd Invest Kft.");
 _i("footerR", "Felszíni adatok: NASA/GSFC/ASU, LRO", "Surface data: NASA/GSFC/ASU, LRO");
 _i("srcBtn", "Források", "Sources");
 _i("srcH", "Források", "Sources");
@@ -4461,7 +4476,7 @@ _i("compOrb", (fe, ti) => LANG==="hu"
     (fe, ti) => `From orbit (Lunar Prospector GRS, Prettyman 2006, 2° pixels, ~150 km average): FeO ${fe}% / TiO₂ ${ti}%. For comparison only; the calculation uses the Apollo sample.`);
 
 
-/* v0.9.1 walk */
+/* v0.9.2 walk */
 _i("walkTitle", "Séta a bázison", "Walk the base");
 _i("walkLaunchHint", "Nyiss egy 1:1 léptékű, első személyű 3D nézetet az Összekötő gerincen (déli sarkvidék). A kijelölt rakomány a kiindulópont mellé kerül.", "Open a 1:1 first-person 3D view on Connecting Ridge (lunar south pole). Your selected cargo is placed near the starting point.");
 _i("walkExit", "Kilépés", "Exit");
@@ -4482,8 +4497,8 @@ _i("walkNoModule", "nincs kihelyezett eszköz", "no equipment placed");
 _i("walkSunBelow", "horizon alatt", "below the horizon");
 _i("walkEst", "becsült méret", "estimated size");
 _i("walkStandIn", "helyettesítő modell", "stand-in model");
-_i("walkNote", "Alapdomborzat: LRO LOLA 5 m/px déli sarki DEM (Barker et al. 2021, NASA PGDA, Összekötő gerinc, 89,684° D, 163,261° Ny). A 0,6–8 m-es kráterek és a sziklák statisztikai méreteloszlás alapján generáltak, nem mérések. A regolit-textúra illusztráció. 300 × 300 m, 1:1 lépték.",
-   "Base relief: LRO LOLA 5 m/px south-polar DEM (Barker et al. 2021, NASA PGDA, Connecting Ridge, 89.684° S, 163.261° W). Craters 0.6–8 m and rocks follow statistical size-frequency distributions; they are not measurements. The regolith texture is illustrative. 300 × 300 m, 1:1 scale.");
+_i("walkNote", "Alapdomborzat: LRO LOLA 5 m/px déli sarki DEM (Barker et al. 2021, NASA PGDA, Összekötő gerinc, 89,684° D, 163,261° Ny), 300 × 300 m séta, 1:1 lépték. A látóhatárig a 10 km-es környezet 40 m/px LOLA-adattal van kiegészítve (ugyanaz a mozaik). A 0,6–8 m-es kráterek és a sziklák a 300 m-es mezőn statisztikai méreteloszlás alapján generáltak, nem mérések. A regolit-textúra illusztráció.",
+   "Base relief: LRO LOLA 5 m/px south-polar DEM (Barker et al. 2021, NASA PGDA, Connecting Ridge, 89.684° S, 163.261° W), 300 × 300 m walk, 1:1 scale. Out to the horizon the 10 km surroundings use the same mosaic at 40 m/px. Craters 0.6–8 m and rocks on the 300 m field follow statistical size-frequency distributions; they are not measurements. The regolith texture is illustrative.");
 _i("walkDefaultNote", (n) => LANG==="hu"
     ? `A gömbön a(z) ${n} van kiválasztva; a 5 m-es LOLA-kivágás az Összekötő gerincre készült, ezért a séta ott történik.`
     : `The globe has ${n} selected; the 5 m LOLA crop is for Connecting Ridge, so the walk is there.`,
@@ -11330,14 +11345,14 @@ if (document.readyState === "loading") document.addEventListener("DOMContentLoad
 else cargoInit();
 </script>
 <script>"use strict";
-/* v0.9.1 — first-person walk on LOLA 5 m DEM at Connecting Ridge. */
+/* v0.9.2 — first-person walk on LOLA 5 m DEM at Connecting Ridge, horizon skirt. */
 (function () {
   const R_MOON = 1737400;
   const EXTENT = 400;
   const WALKABLE = 150; /* half-side of 300 m square */
   const GRID = 256;
   const G = 1.62;
-  const EYE = 1.65;
+  const EYE = 1.7;
   const WALK_SPD = 1.7;
   const RUN_SPD = 3.8;
   const JUMP_V = 1.85;
@@ -11404,6 +11419,48 @@ else cargoInit();
     const z00 = hm[r0 * GRID + c0], z10 = hm[r0 * GRID + c1];
     const z01 = hm[r1 * GRID + c0], z11 = hm[r1 * GRID + c1];
     return (z00 * (1 - tx) + z10 * tx) * (1 - ty) + (z01 * (1 - tx) + z11 * tx) * ty;
+  }
+
+  /* Far-field LOLA (40 m, 10 km). Optional spherical drop for a true horizon. */
+  function horizonHeight(x, z, curved) {
+    const hm = W.hmHorizon;
+    const n = W.hmHorizonN || 0;
+    const ext = W.hmHorizonExt || 10000;
+    let h;
+    if (hm && n > 1) {
+      const u = (x + ext / 2) / ext * (n - 1);
+      const v = (ext / 2 - z) / ext * (n - 1);
+      const c = clamp(u, 0, n - 1), r = clamp(v, 0, n - 1);
+      const c0 = Math.floor(c), r0 = Math.floor(r);
+      const c1 = Math.min(c0 + 1, n - 1), r1 = Math.min(r0 + 1, n - 1);
+      const tx = c - c0, ty = r - r0;
+      const z00 = hm[r0 * n + c0], z10 = hm[r0 * n + c1];
+      const z01 = hm[r1 * n + c0], z11 = hm[r1 * n + c1];
+      h = (z00 * (1 - tx) + z10 * tx) * (1 - ty) + (z01 * (1 - tx) + z11 * tx) * ty;
+    } else {
+      /* Procedural fallback: DEM-edge height plus curvature (HUD note labels this). */
+      const half = EXTENT / 2;
+      const rr = Math.hypot(x, z) || 1;
+      h = heightAt(x / rr * half * 0.98, z / rr * half * 0.98);
+    }
+    if (curved) h -= (x * x + z * z) / (2 * R_MOON);
+    return h;
+  }
+
+  /* Visual / shadow sample: 5 m DEM inside 400 m, 40 m LOLA beyond. */
+  function heightSample(x, z) {
+    const half = EXTENT / 2;
+    if (Math.abs(x) <= half && Math.abs(z) <= half) return heightAt(x, z);
+    return horizonHeight(x, z, true);
+  }
+
+  function clampToGround() {
+    const minY = heightAt(W.px, W.pz) + EYE;
+    if (!(W.py >= minY - 1e-4)) {
+      W.py = minY;
+      if (W.vy < 0) W.vy = 0;
+      W.onGround = true;
+    }
   }
 
   function playerLatLon() {
@@ -11578,6 +11635,10 @@ else cargoInit();
     geo.setAttribute("color", new THREE.BufferAttribute(cols, 3));
     if (THREE.VertexColors !== undefined) mat.vertexColors = THREE.VertexColors;
     else mat.vertexColors = true;
+    mat.side = THREE.DoubleSide;
+    mat.depthWrite = true;
+    mat.transparent = false;
+    mat.opacity = 1;
     const mesh = new THREE.Mesh(geo, mat);
     mesh.receiveShadow = true;
     /* Shadow maps self-shadow almost the whole DEM at a 1.8° sun (acne).
@@ -11588,36 +11649,160 @@ else cargoInit();
     return mesh;
   }
 
-  function computeTerrainShadow(sunDir) {
-    const mesh = W.terrain;
-    if (!mesh || !W.hm) return;
+  const SHADOW_FLOOR = 0.48; /* shadowed regolith stays a readable dark grey */
+  const HORIZON_INNER = EXTENT / 2 - 6;
+
+  function skirtY(x, z) {
+    const r = Math.hypot(x, z);
+    const half = EXTENT / 2;
+    const hHor = horizonHeight(x, z, true);
+    if (r >= half + 18) return hHor;
+    const ee = Math.min(half * 0.995, r || half);
+    const hDem = heightAt(x / (r || 1) * ee, z / (r || 1) * ee);
+    const t = clamp((r - (half - 10)) / 28, 0, 1);
+    return hDem * (1 - t) + hHor * t;
+  }
+
+  function buildHorizonSkirt() {
+    const n = W.hmHorizonN || 181;
+    const ext = W.hmHorizonExt || 10000;
+    const N = n * n;
+    const pos = new Float32Array(N * 3);
+    const uv = new Float32Array(N * 2);
+    const cols = new Float32Array(N * 3);
+    const idx = [];
+    const uvScale = ext / EXTENT * 6;
+    for (let r = 0; r < n; r++) {
+      for (let c = 0; c < n; c++) {
+        const i = r * n + c;
+        const x = (c / (n - 1)) * ext - ext / 2;
+        const z = ext / 2 - (r / (n - 1)) * ext;
+        pos[i * 3] = x;
+        pos[i * 3 + 1] = skirtY(x, z);
+        pos[i * 3 + 2] = z;
+        uv[i * 2] = c / (n - 1) * uvScale;
+        uv[i * 2 + 1] = r / (n - 1) * uvScale;
+        cols[i * 3] = cols[i * 3 + 1] = cols[i * 3 + 2] = 1;
+      }
+    }
+    for (let r = 0; r < n - 1; r++) {
+      for (let c = 0; c < n - 1; c++) {
+        const a = r * n + c, b = a + 1, cc = a + n, d = cc + 1;
+        function rad(i) { return Math.hypot(pos[i * 3], pos[i * 3 + 2]); }
+        /* Keep a hole under the 400 m DEM so the two meshes don't z-fight. */
+        if (Math.min(rad(a), rad(b), rad(cc), rad(d)) < HORIZON_INNER) continue;
+        idx.push(a, cc, b, b, cc, d);
+      }
+    }
+    if (!idx.length) return null;
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
+    geo.setAttribute("color", new THREE.BufferAttribute(cols, 3));
+    geo.setIndex(new THREE.BufferAttribute(new Uint32Array(idx), 1));
+    geo.computeVertexNormals();
+    geo.computeBoundingSphere();
+    const mat = new THREE.MeshStandardMaterial({
+      color: 0xd8d2c6,
+      roughness: 0.92,
+      metalness: 0.0,
+      envMapIntensity: 0,
+      flatShading: false,
+      side: THREE.DoubleSide,
+      depthWrite: true,
+      transparent: false
+    });
+    if (W.texAlbedo) {
+      mat.map = W.texAlbedo;
+      mat.color.set(0xf2eee6);
+    }
+    if (W.texNormal) {
+      mat.normalMap = W.texNormal;
+      mat.normalScale = new THREE.Vector2(0.18, 0.18);
+    }
+    if (THREE.VertexColors !== undefined) mat.vertexColors = THREE.VertexColors;
+    else mat.vertexColors = true;
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.receiveShadow = true;
+    mesh.castShadow = false;
+    mesh.name = "horizonSkirt";
+    mesh.renderOrder = -1;
+    W.skirt = mesh;
+    return mesh;
+  }
+
+  /* Nearest-neighbour sample for shadow rays (bilinear is for the visual mesh). */
+  function heightSampleFast(x, z) {
+    const half = EXTENT / 2;
+    if (Math.abs(x) <= half && Math.abs(z) <= half && W.hm) {
+      const n = GRID;
+      const c = Math.max(0, Math.min(n - 1, Math.round((x + half) / EXTENT * (n - 1))));
+      const r = Math.max(0, Math.min(n - 1, Math.round((half - z) / EXTENT * (n - 1))));
+      return W.hm[r * n + c];
+    }
+    const hm = W.hmHorizon;
+    if (hm && W.hmHorizonN > 1) {
+      const n = W.hmHorizonN, ext = W.hmHorizonExt || 10000;
+      const c = Math.max(0, Math.min(n - 1, Math.round((x + ext / 2) / ext * (n - 1))));
+      const r = Math.max(0, Math.min(n - 1, Math.round((ext / 2 - z) / ext * (n - 1))));
+      return hm[r * n + c] - (x * x + z * z) / (2 * R_MOON);
+    }
+    return horizonHeight(x, z, true);
+  }
+
+  function shadeMesh(mesh, sunDir, getY, n, ext, step, maxT, startT, stride) {
+    if (!mesh) return;
     const attr = mesh.geometry.getAttribute("color");
     if (!attr) return;
-    const n = GRID, arr = attr.array, half = EXTENT / 2;
+    const arr = attr.array;
+    const floor = SHADOW_FLOOR;
     if (!sunDir || sunDir.y <= 0.002) {
-      arr.fill(0);
+      for (let i = 0; i < arr.length; i++) arr[i] = floor;
       attr.needsUpdate = true;
       return;
     }
     const sx = sunDir.x, sy = sunDir.y, sz = sunDir.z;
-    const step = 4, maxT = 280;
-    for (let r = 0; r < n; r++) {
-      for (let c = 0; c < n; c++) {
-        const x = (c / (n - 1)) * EXTENT - half;
-        const z = half - (r / (n - 1)) * EXTENT;
-        const y = W.hm[r * n + c] + 0.65;
-        let t = 10, lit = 1;
-        while (t < maxT) {
-          const px = x + sx * t, py = y + sy * t, pz = z + sz * t;
-          if (px > half || px < -half || pz > half || pz < -half) break;
-          if (heightAt(px, pz) > py) { lit = 0; break; }
-          t += step;
+    const halfH = (W.hmHorizonExt || 10000) / 2;
+    const st = stride || 1;
+    const inner2 = HORIZON_INNER * HORIZON_INNER;
+    for (let r = 0; r < n; r += st) {
+      for (let c = 0; c < n; c += st) {
+        const x = (c / (n - 1)) * ext - ext / 2;
+        const z = ext / 2 - (r / (n - 1)) * ext;
+        let v;
+        if (x * x + z * z < inner2 && ext > EXTENT) {
+          v = 1; /* hole under the 400 m DEM — unused verts */
+        } else {
+          const y = getY(x, z, r, c) + 0.7;
+          let t = startT, lit = 1;
+          while (t < maxT) {
+            const px = x + sx * t, py = y + sy * t, pz = z + sz * t;
+            if (Math.abs(px) > halfH || Math.abs(pz) > halfH) break;
+            if (heightSampleFast(px, pz) > py) { lit = 0; break; }
+            t += step;
+          }
+          v = lit ? 1 : floor;
         }
-        const i = (r * n + c) * 3;
-        arr[i] = arr[i + 1] = arr[i + 2] = lit;
+        const r1 = Math.min(n, r + st), c1 = Math.min(n, c + st);
+        for (let rr = r; rr < r1; rr++) {
+          for (let cc = c; cc < c1; cc++) {
+            const i = (rr * n + cc) * 3;
+            arr[i] = arr[i + 1] = arr[i + 2] = v;
+          }
+        }
       }
     }
     attr.needsUpdate = true;
+  }
+
+  function computeTerrainShadow(sunDir) {
+    if (!W.hm) return;
+    shadeMesh(W.terrain, sunDir, function (x, z, r, c) { return W.hm[r * GRID + c]; },
+      GRID, EXTENT, 5, 360, 10, 1);
+    if (W.skirt) {
+      shadeMesh(W.skirt, sunDir, function (x, z) { return skirtY(x, z); },
+        W.hmHorizonN || 181, W.hmHorizonExt || 10000, 60, 2200, 50, 2);
+    }
   }
 
 
@@ -11626,28 +11811,37 @@ else cargoInit();
     const p = new Float32Array(n * 3);
     const c = new Float32Array(n * 3);
     const y0 = heightAt(0, 0);
-    for (let i = 0; i < n; i++) {
-      let x = Math.random() * 2 - 1, y = Math.random() * 2 - 1, z = Math.random() * 2 - 1;
+    const rad = 9000;
+    let k = 0;
+    /* Upper hemisphere only — never below the local horizon. */
+    while (k < n) {
+      let x = Math.random() * 2 - 1, y = Math.random(), z = Math.random() * 2 - 1;
       const l = Math.hypot(x, y, z) || 1;
-      const r = 700;
-      p[i * 3] = x / l * r;
-      p[i * 3 + 1] = y / l * r + y0;
-      p[i * 3 + 2] = z / l * r;
+      y = y / l;
+      if (y < 0.02) continue;
+      x = x / l;
+      z = z / l;
+      p[k * 3] = x * rad;
+      p[k * 3 + 1] = y * rad + y0;
+      p[k * 3 + 2] = z * rad;
       const mag = Math.pow(Math.random(), 2.2);
       const v = 0.45 + 0.55 * mag;
-      c[i * 3] = v; c[i * 3 + 1] = v; c[i * 3 + 2] = 0.9 + 0.1 * v;
+      c[k * 3] = v; c[k * 3 + 1] = v; c[k * 3 + 2] = 0.9 + 0.1 * v;
+      k++;
     }
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.BufferAttribute(p, 3));
     g.setAttribute("color", new THREE.BufferAttribute(c, 3));
     const m = new THREE.PointsMaterial({
-      size: 1.4, sizeAttenuation: false, vertexColors: true,
-      transparent: true, opacity: 0.9, depthWrite: false
+      size: 1.5, sizeAttenuation: false, vertexColors: true,
+      transparent: true, opacity: 0.9, depthWrite: false, depthTest: true
     });
     if (m.toneMapped !== undefined) m.toneMapped = false;
     const pts = new THREE.Points(g, m);
     pts.frustumCulled = false;
+    pts.renderOrder = -20;
     scene.add(pts);
+    W.stars = pts;
   }
 
   function makeRadialTex(stops, size) {
@@ -11673,8 +11867,8 @@ else cargoInit();
     return new THREE.Vector3(0, heightAt(0, 0), 0);
   }
 
-  const SUN_DIST = 750;
-  const EARTH_DIST = 700;
+  const SUN_DIST = 8500;
+  const EARTH_DIST = 8000;
   /* Photographic, not physical: 1.8° N·L is ~0.03, Lambert /π would leave the ground nearly black.
      Intensity is chosen so sunlit faces read as bright grey after ACES exposure. */
   const SUN_INTENSITY = 24;
@@ -11767,7 +11961,7 @@ else cargoInit();
     const origin = sunOrigin();
     const sunDir = dirFromAzEl(W.sunAA.az, W.sunAA.elev);
     const sunUp = W.sunAA.elev > 0;
-    W.hemi.intensity = sunUp ? 0.035 : 0.02;
+    W.hemi.intensity = sunUp ? 0.13 : 0.10;
 
     /* Direction = position − target. Target must be the terrain origin, not (0,0,0). */
     W.sunLight.position.copy(origin).add(sunDir.clone().multiplyScalar(400));
@@ -12314,10 +12508,13 @@ else cargoInit();
     } else {
       W.py = feet + EYE;
     }
+    clampToGround();
   }
 
   function applyCamera() {
+    clampToGround();
     const cam = W.camera;
+    if (!cam) return;
     cam.position.set(W.px, W.py, W.pz);
     cam.rotation.order = "YXZ";
     cam.rotation.y = W.yaw;
@@ -12365,11 +12562,23 @@ else cargoInit();
     const albP = loadTexture(new URL("regolith_albedo.jpg", base).href);
     const nrmP = loadTexture(new URL("regolith_normal.jpg", base).href);
     const earP = loadTexture(new URL("earth.jpg", base).href);
-    const [bin, meta, alb, nrm, ear] = await Promise.all([binP, metaP, albP, nrmP, earP]);
+    const horP = fetch(new URL("horizon.bin", base)).then(function (r) { return r.ok ? r.arrayBuffer() : null; }).catch(function () { return null; });
+    const horMetaP = fetch(new URL("horizon_meta.json", base)).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
+    const [bin, meta, alb, nrm, ear, hor, horMeta] = await Promise.all([binP, metaP, albP, nrmP, earP, horP, horMetaP]);
     W.hm = new Float32Array(bin);
     W.meta = meta;
     if (W.hm.length !== GRID * GRID) {
       console.warn("heightmap length", W.hm.length, "expected", GRID * GRID);
+    }
+    if (hor) {
+      W.hmHorizon = new Float32Array(hor);
+      W.hmHorizonN = (horMeta && horMeta.grid) ? horMeta.grid : Math.round(Math.sqrt(W.hmHorizon.length));
+      W.hmHorizonExt = (horMeta && horMeta.extent_m) ? horMeta.extent_m : 10000;
+    } else {
+      W.hmHorizon = null;
+      W.hmHorizonN = 181;
+      W.hmHorizonExt = 10000;
+      console.warn("horizon.bin missing — using procedural skirt");
     }
     W.texAlbedo = alb;
     W.texNormal = nrm;
@@ -12408,6 +12617,7 @@ else cargoInit();
     W.ready = false;
     W.skyReady = false;
     W.terrain = null;
+    W.skirt = null;
     W.sunLight = null;
     W.sunDisc = null;
     W.sunGlow = null;
@@ -12459,6 +12669,7 @@ else cargoInit();
     W.yaw = Math.PI;
     W.pitch = -0.08;
     W.py = heightAt(W.px, W.pz) + EYE;
+    clampToGround();
 
     const canvas = $("#walkCanvas");
     const renderer = new THREE.WebGLRenderer({
@@ -12477,9 +12688,13 @@ else cargoInit();
     W.renderer = renderer;
     W.scene = new THREE.Scene();
     W.scene.background = new THREE.Color(0x000000);
-    W.camera = new THREE.PerspectiveCamera(65, 1, 0.12, 1500);
+    W.camera = new THREE.PerspectiveCamera(65, 1, 0.2, 14000);
     resize();
     W.scene.add(buildTerrain());
+    {
+      const skirt = buildHorizonSkirt();
+      if (skirt) W.scene.add(skirt);
+    }
     addStars(W.scene);
     addSunAndEarth(W.scene);
     addRocks(W.scene);
@@ -12737,6 +12952,29 @@ else cargoInit();
         if (W.sunGlow) W.sunGlow.material.depthTest = o.depthTest;
       }
       if (W.renderer && W.scene && W.camera) W.renderer.render(W.scene, W.camera);
+    },
+    jump: tryJump,
+    step: function (dt) {
+      physics(dt || 1 / 60);
+      applyCamera();
+      if (W.renderer && W.scene && W.camera) W.renderer.render(W.scene, W.camera);
+    },
+    heightSample: heightSample,
+    skirtInfo: function () {
+      const m = W.skirt;
+      if (!m) return { missing: true, n: W.hmHorizonN, ext: W.hmHorizonExt, hasHm: !!W.hmHorizon };
+      const pos = m.geometry.getAttribute("position");
+      m.geometry.computeBoundingBox();
+      const b = m.geometry.boundingBox;
+      return {
+        verts: pos.count,
+        idx: m.geometry.index ? m.geometry.index.count : 0,
+        box: { min: { x: b.min.x, y: b.min.y, z: b.min.z }, max: { x: b.max.x, y: b.max.y, z: b.max.z } },
+        n: W.hmHorizonN,
+        ext: W.hmHorizonExt,
+        hasHm: !!W.hmHorizon,
+        eye: 1.7
+      };
     }
   };
 
