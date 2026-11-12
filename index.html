@@ -46,6 +46,12 @@ header .tag{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:v
 #fsBtn:hover,#fsBtn:focus-visible,#fsBtn.on{color:var(--accent)}
 #fsBtn[hidden]{display:none}
 #fsBtn svg{width:16px;height:16px;display:block;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+#sfxBtn{flex:none;min-width:38px;padding:7px 9px;line-height:0;color:var(--muted)}
+#sfxBtn:hover,#sfxBtn:focus-visible,#sfxBtn.on{color:var(--accent)}
+#sfxBtn.on{border-color:var(--accent)}
+#sfxBtn svg{width:16px;height:16px;display:block;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+#sfxBtn svg path:first-child{fill:currentColor;stroke:none}
+#sfxBtn svg [hidden]{display:none}
 
 /* gombok */
 .seg{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line-strong)}
@@ -255,6 +261,7 @@ footer{padding:14px var(--pad);border-top:1px solid var(--line);color:var(--fain
   .clock input[type=range]{min-width:90px}
   .hdr-actions{grid-column:2;grid-row:1;flex-wrap:wrap;justify-content:flex-end;gap:6px;max-width:100%}
   #fsBtn{min-width:40px;min-height:40px;padding:8px}
+  #sfxBtn{min-width:40px;min-height:40px;padding:8px}
   #kStrip{display:none}
   .layout{grid-template-columns:1fr;min-height:0}
   .center{order:-1}
@@ -467,6 +474,13 @@ button.cargo-src.as-btn{background:none;border:0;border-bottom:1px solid transpa
    <button type="button" class="btn" id="musBtn" aria-pressed="false" data-i18n-aria="musAria" data-i18n-title="musTitle" aria-label="Háttérzene" title="Háttérzene (ki, alapból)">♪</button>
    <input type="range" id="musVol" min="0" max="100" value="40" data-i18n-aria="volAria" aria-label="Hangerő" disabled>
   </div>
+  <button type="button" class="btn on" id="sfxBtn" aria-pressed="true" data-i18n-aria="sfxAria" data-i18n-title="sfxTitle" aria-label="UI hangok be/ki" title="UI hangok be/ki">
+   <svg viewBox="0 0 16 16" aria-hidden="true">
+    <path d="M2.8 6.2h2.1L7.8 3.8v8.4L4.9 9.8H2.8V6.2z"/>
+    <path class="sfx-waves" d="M9.6 6.1a2.5 2.5 0 010 3.8M11.5 4.5a4.6 4.6 0 010 7"/>
+    <path class="sfx-slash" d="M3 13.2 13.2 2.8" hidden/>
+   </svg>
+  </button>
   <div class="seg lang-toggle" id="langSeg" role="radiogroup" data-i18n-aria="langAria" aria-label="Nyelv">
    <button type="button" data-v="hu" class="on" role="radio" aria-checked="true">HU</button>
    <button type="button" data-v="en" role="radio" aria-checked="false">EN</button>
@@ -2114,6 +2128,8 @@ _i("srcH", "Források", "Sources");
 _i("close", "Bezárás", "Close");
 _i("musAria", "Háttérzene", "Background music");
 _i("musTitle", "Háttérzene (ki, alapból)", "Background music (off by default)");
+_i("sfxAria", "UI hangok be/ki", "UI sounds on/off");
+_i("sfxTitle", "UI hangok be/ki", "UI sounds on/off");
 _i("volAria", "Hangerő", "Volume");
 _i("langAria", "Nyelv", "Language");
 _i("clockLive", "Élő idő", "Live time");
@@ -8457,6 +8473,151 @@ function musToggle(on){
 }
 $("#musBtn").addEventListener("click",()=>musToggle(!MUS.on));
 $("#musVol").addEventListener("input",()=>{ MUS.vol=$("#musVol").value/100; if(MUS.on) musApplyVol(); });
+
+// UI hangok (szintetizált space-interface klikk, fájl nélkül)
+const SFX_KEY="colonyCalc.uiSfx";
+const SFX={ctx:null, on:true, last:0, noise:null};
+function sfxLoad(){
+  try{ const s=localStorage.getItem(SFX_KEY); if(s==="0") return false; if(s==="1") return true; }catch(e){}
+  return true;
+}
+function sfxSave(){
+  try{ localStorage.setItem(SFX_KEY, SFX.on?"1":"0"); }catch(e){}
+}
+function sfxSync(){
+  const b=$("#sfxBtn"); if(!b) return;
+  b.setAttribute("aria-pressed", String(SFX.on));
+  b.classList.toggle("on", SFX.on);
+  const sl=b.querySelector(".sfx-slash");
+  const wv=b.querySelector(".sfx-waves");
+  if(sl){ if(SFX.on) sl.setAttribute("hidden",""); else sl.removeAttribute("hidden"); }
+  if(wv){ if(SFX.on) wv.removeAttribute("hidden"); else wv.setAttribute("hidden",""); }
+}
+function sfxEnsure(){
+  const Ac=window.AudioContext||window.webkitAudioContext;
+  if(!Ac) return null;
+  if(!SFX.ctx){
+    try{ SFX.ctx=new Ac(); }catch(e){ return null; }
+  }
+  if(SFX.ctx.state==="suspended"){
+    try{ const p=SFX.ctx.resume(); if(p&&p.catch) p.catch(function(){}); }catch(e){}
+  }
+  return SFX.ctx;
+}
+function sfxPlay(kind, force){
+  if(!SFX.on && !force) return;
+  const now=performance.now();
+  if(now-SFX.last<24) return;
+  SFX.last=now;
+  const ctx=sfxEnsure();
+  if(!ctx) return;
+  const t0=ctx.currentTime;
+  const presets={
+    click:{f0:920,f1:620,dur:0.055,type:"sine",peak:1,nPeak:0.4},
+    on:   {f0:700,f1:1180,dur:0.068,type:"sine",peak:1,nPeak:0.35},
+    off:  {f0:880,f1:420,dur:0.075,type:"triangle",peak:0.9,nPeak:0.3},
+    tab:  {f0:640,f1:980,dur:0.062,type:"triangle",peak:0.95,nPeak:0.45}
+  };
+  const p=presets[kind]||presets.click;
+  try{
+    const master=ctx.createGain();
+    master.gain.value=0.1; // kb. -20 dB
+    master.connect(ctx.destination);
+    const o=ctx.createOscillator();
+    o.type=p.type;
+    o.frequency.setValueAtTime(p.f0, t0);
+    o.frequency.exponentialRampToValueAtTime(Math.max(40,p.f1), t0+p.dur*0.72);
+    const og=ctx.createGain();
+    og.gain.setValueAtTime(0, t0);
+    og.gain.linearRampToValueAtTime(p.peak, t0+0.004);
+    og.gain.exponentialRampToValueAtTime(0.001, t0+p.dur);
+    const lp=ctx.createBiquadFilter();
+    lp.type="lowpass"; lp.frequency.value=2800; lp.Q.value=0.7;
+    o.connect(lp); lp.connect(og); og.connect(master);
+    o.start(t0); o.stop(t0+p.dur+0.01);
+    if(kind==="on"||kind==="tab"){
+      const o2=ctx.createOscillator();
+      o2.type="sine";
+      o2.frequency.setValueAtTime(p.f0*2, t0);
+      o2.frequency.exponentialRampToValueAtTime(Math.max(40,p.f1*2), t0+p.dur*0.72);
+      const g2=ctx.createGain();
+      g2.gain.setValueAtTime(0, t0);
+      g2.gain.linearRampToValueAtTime(0.28, t0+0.003);
+      g2.gain.exponentialRampToValueAtTime(0.001, t0+p.dur*0.85);
+      o2.connect(g2); g2.connect(master);
+      o2.start(t0); o2.stop(t0+p.dur);
+    }
+    if(!SFX.noise){
+      const nlen=Math.ceil(ctx.sampleRate*0.04);
+      const buf=ctx.createBuffer(1, nlen, ctx.sampleRate);
+      const d=buf.getChannelData(0);
+      for(let i=0;i<nlen;i++) d[i]=Math.random()*2-1;
+      SFX.noise=buf;
+    }
+    const ns=ctx.createBufferSource();
+    ns.buffer=SFX.noise;
+    const hp=ctx.createBiquadFilter();
+    hp.type="highpass"; hp.frequency.value=4500; hp.Q.value=0.8;
+    const ng=ctx.createGain();
+    ng.gain.setValueAtTime(0, t0);
+    ng.gain.linearRampToValueAtTime(0.45*p.nPeak, t0+0.002);
+    ng.gain.exponentialRampToValueAtTime(0.001, t0+0.022);
+    ns.connect(hp); hp.connect(ng); ng.connect(master);
+    ns.start(t0); ns.stop(t0+0.04);
+  }catch(e){}
+}
+function sfxKind(hit){
+  if(!hit) return "click";
+  if(hit.id==="fsBtn"){
+    const on=hit.classList.contains("on")||hit.getAttribute("aria-pressed")==="true";
+    return on?"off":"on";
+  }
+  if(hit.id==="sfxBtn"||hit.id==="musBtn"||hit.getAttribute("role")==="switch"||hit.hasAttribute("aria-pressed")){
+    const on=hit.classList.contains("on")||hit.getAttribute("aria-pressed")==="true";
+    return on?"on":"off";
+  }
+  if(hit.tagName==="SUMMARY"){
+    const d=hit.closest("details");
+    return (d&&d.open)?"off":"on";
+  }
+  if(hit.closest(".seg")||hit.classList.contains("cargo-tab")||hit.closest(".cargo-tabs")||hit.getAttribute("role")==="tab"||hit.getAttribute("role")==="radio")
+    return "tab";
+  return "click";
+}
+function sfxTarget(e){
+  const el=e.target;
+  if(!el||!el.closest) return null;
+  if(el.closest("#globe, canvas#globe, #globeWrap > canvas")) return null;
+  if(el.closest("input, textarea, select, option")) return null;
+  const hit=el.closest("button, .btn, .cargo-tab, .seg button, summary, [role='tab'], [role='switch'], [role='radio']");
+  if(!hit) return null;
+  if(hit.disabled||hit.getAttribute("aria-disabled")==="true") return null;
+  return hit;
+}
+function sfxToggle(on){
+  if(!on){ sfxPlay("off", true); SFX.on=false; }
+  else { SFX.on=true; }
+  sfxSync(); sfxSave();
+  if(on) sfxPlay("on");
+}
+function sfxInit(){
+  const b=$("#sfxBtn"); if(!b) return;
+  SFX.on=sfxLoad();
+  sfxSync();
+  b.addEventListener("click",()=>sfxToggle(!SFX.on));
+  document.addEventListener("click", e=>{
+    const hit=sfxTarget(e);
+    if(!hit||hit.id==="sfxBtn") return;
+    sfxPlay(sfxKind(hit));
+  });
+  window.__uiSfx={
+    play:sfxPlay, ensure:sfxEnsure, kind:sfxKind,
+    get on(){ return SFX.on; },
+    set on(v){ SFX.on=!!v; sfxSync(); sfxSave(); },
+    ctx(){ return SFX.ctx; }
+  };
+}
+sfxInit();
 
 // gomb-ripple
 document.addEventListener("click", e=>{
