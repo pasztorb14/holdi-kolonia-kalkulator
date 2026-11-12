@@ -1,0 +1,19 @@
+Háttérzene a holdi kolóniakalkulátorhoz (v0.5.1).
+Mindhárom szám Creative Commons CC0 1.0 (közkincs):
+https://creativecommons.org/publicdomain/zero/1.0/
+
+1. Cosmic Navigation — Synth-thetic
+   https://opengameart.org/content/cosmic-navigation
+   Licenc a forrásoldalon: CC0 1.0. Feltüntetés nem kötelező.
+
+2. Starfield Romance (Yoiyami Blue Series, 3.) — Yoiyami
+   https://opengameart.org/content/starfield-romance-%E2%80%93-cc0-ambient-emotional-space-theme-yoiyami-blue-series-%E2%80%93-no3
+   Licenc a forrásoldalon: CC0 1.0. Feltüntetés nem kötelező;
+   a szerző javaslata: Music by Yoiyami (CC0).
+
+3. Exploration Theme — Cleyton Kauffman
+   https://opengameart.org/content/exploration-theme
+   Licenc a forrásoldalon: CC0 1.0. Feltüntetés nem kötelező;
+   a szerző javaslata: Music by Cleyton Kauffman — https://soundcloud.com/cleytonkauffman
+
+A fájlok 96 kbps-ra célzott OGG Vorbis kódolásúak, -18 LUFS szintre igazítva.

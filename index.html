@@ -306,7 +306,7 @@ footer{padding:14px var(--pad);border-top:1px solid var(--line);color:var(--fain
 </style>
 </head><body>
 <header>
- <div class="brand"><h1>Holdi kolónia&shy;kalkulátor</h1><div class="tag">v0.5 · forrásolt becslés, nem mérnöki terv</div></div>
+ <div class="brand"><h1>Holdi kolónia&shy;kalkulátor</h1><div class="tag">v0.5.1 · forrásolt becslés, nem mérnöki terv</div></div>
  <div class="clock" id="clockBox">
   <span class="led" id="clockLive" title="Élő idő"></span>
   <label class="sr" for="datePick">Időpont</label>
@@ -458,7 +458,7 @@ footer{padding:14px var(--pad);border-top:1px solid var(--line);color:var(--fain
  </aside>
 </div>
 
-<footer><span>Holdi kolóniakalkulátor · v0.5 · Pásztor Bence számára</span><span>Felszíni adatok: NASA/GSFC/ASU, LRO</span></footer>
+<footer><span>Holdi kolóniakalkulátor · v0.5.1 · Pásztor Bence számára</span><span>Felszíni adatok: NASA/GSFC/ASU, LRO</span></footer>
 <div id="tip"></div>
 <div id="mBar"><div id="mBarTxt"></div><button type="button" id="mBarBtn">Részletek ↓</button></div>
 <div id="srcModal" class="modal" hidden role="dialog" aria-labelledby="srcH" aria-modal="true">
@@ -2627,7 +2627,9 @@ function setSky(on, noHash){
 document.querySelectorAll("#skySeg button").forEach(b=>b.addEventListener("click",()=>setSky(b.dataset.v==="1")));
 
 // ================== FORRÁSOK MODAL ==================
-SRC.music={t:"Háttérzene: eredeti, procedurális ambient, a böngészőben előállítva (Web Audio API). Szerző: a kalkulátor része. Licenc: CC0 1.0 (közkincs), forrásfájl nélkül, minden felhasználása szabad.",u:"https://creativecommons.org/publicdomain/zero/1.0/deed.hu"};
+SRC.music1={t:"„Cosmic Navigation”, Synth-thetic. Licenc: CC0 1.0 (közkincs). OpenGameArt. Feltüntetés nem kötelező.",u:"https://opengameart.org/content/cosmic-navigation"};
+SRC.music2={t:"„Starfield Romance” (Yoiyami Blue Series, 3.), Yoiyami. Licenc: CC0 1.0 (közkincs). OpenGameArt. Javasolt feltüntetés: Music by Yoiyami (CC0).",u:"https://opengameart.org/content/starfield-romance-%E2%80%93-cc0-ambient-emotional-space-theme-yoiyami-blue-series-%E2%80%93-no3"};
+SRC.music3={t:"„Exploration Theme”, Cleyton Kauffman. Licenc: CC0 1.0 (közkincs). OpenGameArt. Javasolt feltüntetés: Music by Cleyton Kauffman — https://soundcloud.com/cleytonkauffman",u:"https://opengameart.org/content/exploration-theme"};
 const SRC_GROUPS=[
   ["Helyszín, térképek, talaj",["svs","ldem80","ldem16","lpsr","gaz","ridge","artemis","apollo","malapert","lsb","ares","lawrence","ch3","lpns","feldman01","lpgrs","prettyman06","li18","lemelin21","illum240","mazarico11","lcross","dens"]],
   ["Hőmodell és efemerisz",["meeus","horizons","hayne17","williams17","paige10","paige09","heat1d","temp"]],
@@ -2635,7 +2637,7 @@ const SRC_GROUPS=[
   ["Élelem és életfenntartás",["bvadFood","area","wheeler","eden","bvadO2","bvadW","issW"]],
   ["Energia, napsütés, kábelezés",["thomas","csank","vsat","vsatMass","fsp40","fsp100","saha","barth","lizcano","illum","lunarday","psr"]],
   ["ISRU, oxigénkinyerés",["allen","pnas","troisi","card","schreiner","lomax","ffcsys","steurer","sesko","promes"]],
-  ["Zene",["music"]]
+  ["Zene",["music1","music2","music3"]]
 ];
 (function buildSrc(){
   const el=$("#srcGroups"); if(!el) return;
@@ -2653,19 +2655,128 @@ $("#srcClose").addEventListener("click", closeSrc);
 $("#srcModal").addEventListener("click", e=>{ if(e.target.id==="srcModal") closeSrc(); });
 document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ closeSrc(); if(typeof closeMenu==="function") closeMenu(); }});
 
-// ================== HÁTTÉRZENE (procedurális, CC0) ==================
-const MUS={ctx:null, master:null, on:false, vol:0.4, nodes:[], timer:null};
-function musBuild(){
+// ================== HÁTTÉRZENE (OGG-lejátszási lista, CC0; procedurális tartalék) ==================
+const PLAYLIST = [
+  {src:"audio/cosmic-navigation.ogg", id:"music1", dur:164},
+  {src:"audio/starfield-romance.ogg", id:"music2", dur:216},
+  {src:"audio/exploration-theme.ogg", id:"music3", dur:134.4}
+];
+function musDur(el, track){
+  // A böngésző az OGG végét a teljes letöltés előtt gyakran rövidebbnek jelzi; a ismert hossz a mérvadó.
+  return (track&&track.dur)||(el&&isFinite(el.duration)&&el.duration)||0;
+}
+const MUS={ctx:null, master:null, on:false, vol:0.4, nodes:[], timer:null, watch:null, wired:false, fallback:false, slots:null, cur:0, order:[], idx:0, _peek:null};
+function musShuffle(avoid){
+  const n=PLAYLIST.length, o=[...Array(n).keys()];
+  for(let i=n-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [o[i],o[j]]=[o[j],o[i]]; }
+  if(avoid!=null && n>1 && o[0]===avoid) [o[0],o[1]]=[o[1],o[0]];
+  return o;
+}
+function musGain(){ return MUS.fallback ? MUS.vol*0.35 : MUS.vol; }
+function musApplyVol(){
+  if(!MUS.master||!MUS.ctx) return;
+  const t=MUS.ctx.currentTime, v=MUS.on?musGain():0;
+  MUS.master.gain.cancelScheduledValues(t);
+  MUS.master.gain.setValueAtTime(v, t);
+  MUS.master.gain.value=v;
+}
+function musWire(){
+  if(MUS.wired) return;
   const Ac=window.AudioContext||window.webkitAudioContext;
-  const ctx=MUS.ctx=MUS.ctx||new Ac();
-  if(ctx.state==="suspended") ctx.resume();
+  MUS.ctx=MUS.ctx||new Ac();
+  MUS.master=MUS.ctx.createGain();
+  MUS.master.gain.value=0;
+  MUS.master.connect(MUS.ctx.destination);
+  function slot(){
+    const el=new Audio(); el.preload="auto";
+    const src=MUS.ctx.createMediaElementSource(el);
+    const g=MUS.ctx.createGain(); g.gain.value=0;
+    src.connect(g); g.connect(MUS.master);
+    el.addEventListener("error", ()=>{ if(MUS.on && !MUS.fallback) musFallback(); });
+    el.addEventListener("ended", ()=>{ if(MUS.on && !MUS.fallback && MUS.slots[MUS.cur].el===el) musCrossfade(1.2); });
+    return {el,g};
+  }
+  MUS.slots=[slot(),slot()];
+  MUS.cur=0; MUS.wired=true;
+}
+function musLaunch(trackIdx, fade){
+  const s=MUS.slots[MUS.cur], t=PLAYLIST[trackIdx];
+  if(!s.el.src || !s.el.src.endsWith(t.src)) s.el.src=t.src;
+  const now=MUS.ctx.currentTime;
+  s.g.gain.cancelScheduledValues(now);
+  s.g.gain.setValueAtTime(0, now);
+  s.g.gain.linearRampToValueAtTime(1, now+fade);
+  const p=s.el.play();
+  if(p&&p.catch) p.catch(()=>{ if(MUS.on && !MUS.fallback) musFallback(); });
+  musWatch();
+  setTimeout(musPreloadNext, 1200);
+}
+function musWatch(){
+  if(MUS.watch) clearInterval(MUS.watch);
+  MUS.watch=setInterval(()=>{
+    if(!MUS.on||MUS.fallback) return;
+    const el=MUS.slots[MUS.cur].el, tr=PLAYLIST[MUS.order[MUS.idx]];
+    const dur=musDur(el,tr);
+    if(!dur||dur<2) return;
+    const fade=Math.min(4.5, Math.max(2.2, dur*0.08));
+    if(dur-el.currentTime <= fade+0.08){ clearInterval(MUS.watch); MUS.watch=null; musCrossfade(fade); }
+  }, 250);
+}
+function musCrossfade(fade){
+  if(!MUS.on||MUS.fallback) return;
+  const prev=MUS.cur; MUS.cur=1-MUS.cur;
+  MUS.idx++;
+  if(MUS.idx>=MUS.order.length){ MUS.order=MUS._peek||musShuffle(MUS.order[MUS.order.length-1]); MUS._peek=null; MUS.idx=0; }
+  const s=MUS.slots[MUS.cur], p=MUS.slots[prev], t=PLAYLIST[MUS.order[MUS.idx]];
+  if(!s.el.src || !s.el.src.endsWith(t.src)) s.el.src=t.src;
+  try{ s.el.currentTime=0; }catch(e){}
+  const now=MUS.ctx.currentTime;
+  s.g.gain.cancelScheduledValues(now);
+  s.g.gain.setValueAtTime(0, now);
+  s.g.gain.linearRampToValueAtTime(1, now+fade);
+  const pv=p.g.gain.value;
+  p.g.gain.cancelScheduledValues(now);
+  p.g.gain.setValueAtTime(pv, now);
+  p.g.gain.linearRampToValueAtTime(0, now+fade);
+  s.el.play().catch(()=>{});
+  musWatch();
+  setTimeout(()=>{
+    if(MUS.on!==true) return;
+    try{ p.el.pause(); }catch(e){}
+    musPreloadNext();
+  }, fade*1000+80);
+}
+function musPreloadNext(){
+  if(!MUS.on||MUS.fallback||!MUS.slots) return;
+  let ti;
+  if(MUS.idx+1<MUS.order.length) ti=MUS.order[MUS.idx+1];
+  else { MUS._peek=musShuffle(MUS.order[MUS.idx]); ti=MUS._peek[0]; }
+  const other=MUS.slots[1-MUS.cur];
+  if(!other.el.src || !other.el.src.endsWith(PLAYLIST[ti].src)){ other.el.src=PLAYLIST[ti].src; other.el.load(); }
+}
+function musStart(){
+  musWire();
+  if(MUS.ctx.state==="suspended") MUS.ctx.resume();
+  MUS.fallback=false;
+  MUS.order=musShuffle(); MUS.idx=0; MUS._peek=null;
+  const t=MUS.ctx.currentTime;
+  MUS.master.gain.cancelScheduledValues(t);
+  MUS.master.gain.setValueAtTime(0, t);
+  MUS.master.gain.linearRampToValueAtTime(musGain(), t+0.5);
+  musLaunch(MUS.order[0], 1.8);
+}
+function musFallback(){
+  if(MUS.fallback||!MUS.on) return;
+  MUS.fallback=true;
+  if(MUS.watch){ clearInterval(MUS.watch); MUS.watch=null; }
+  (MUS.slots||[]).forEach(s=>{ try{s.el.pause(); s.g.gain.value=0;}catch(e){} });
+  musBuildProc();
+}
+function musBuildProc(){
+  const ctx=MUS.ctx; if(!ctx) return;
   MUS.nodes.forEach(n=>{ try{n.stop&&n.stop();}catch(e){} });
   MUS.nodes=[];
-  if(MUS.master) try{MUS.master.disconnect();}catch(e){}
-  const master=MUS.master=ctx.createGain();
-  master.gain.value=0;
-  master.connect(ctx.destination);
-  const freqs=[55, 82.41, 110, 164.81, 220]; // A1, E2, A2, E3, A3
+  const freqs=[55, 82.41, 110, 164.81, 220];
   freqs.forEach((f,i)=>{
     const o=ctx.createOscillator(); o.type=i<3?"sine":"triangle"; o.frequency.value=f*(1+(Math.random()-0.5)*0.003);
     const g=ctx.createGain(); g.gain.value=0;
@@ -2675,20 +2786,18 @@ function musBuild(){
     g.gain.setValueAtTime(0, ctx.currentTime);
     g.gain.linearRampToValueAtTime((0.09/(i+1.4)), ctx.currentTime+4);
     const filt=ctx.createBiquadFilter(); filt.type="lowpass"; filt.frequency.value=280+i*90; filt.Q.value=0.7;
-    o.connect(filt); filt.connect(g); g.connect(master);
+    o.connect(filt); filt.connect(g); g.connect(MUS.master);
     o.start(); lfo.start();
     MUS.nodes.push(o,lfo);
   });
-  // halk, szűrt zaj (űrbeli "levegő")
   const nLen=2*ctx.sampleRate, buf=ctx.createBuffer(1,nLen,ctx.sampleRate), d=buf.getChannelData(0);
   let last=0; for(let i=0;i<nLen;i++){ last=last*0.97+(Math.random()*2-1)*0.03; d[i]=last; }
   const ns=ctx.createBufferSource(); ns.buffer=buf; ns.loop=true;
   const nf=ctx.createBiquadFilter(); nf.type="bandpass"; nf.frequency.value=420; nf.Q.value=0.5;
   const ng=ctx.createGain(); ng.gain.value=0.03;
-  ns.connect(nf); nf.connect(ng); ng.connect(master); ns.start(); MUS.nodes.push(ns);
-  // ritka, távoli csillag-csipogás
+  ns.connect(nf); nf.connect(ng); ng.connect(MUS.master); ns.start(); MUS.nodes.push(ns);
   function ping(){
-    if(!MUS.on||!MUS.ctx) return;
+    if(!MUS.on||!MUS.ctx||!MUS.fallback) return;
     const t=MUS.ctx.currentTime;
     const o=MUS.ctx.createOscillator(); o.type="sine"; o.frequency.value=660+Math.random()*880;
     const g=MUS.ctx.createGain(); g.gain.setValueAtTime(0,t);
@@ -2698,22 +2807,33 @@ function musBuild(){
     MUS.timer=setTimeout(ping, 7000+Math.random()*14000);
   }
   MUS.timer=setTimeout(ping, 4000);
-  master.gain.linearRampToValueAtTime(MUS.vol*0.35, ctx.currentTime+1.6);
+  musApplyVol();
 }
 function musStop(){
+  if(MUS.watch){ clearInterval(MUS.watch); MUS.watch=null; }
   if(MUS.timer){ clearTimeout(MUS.timer); MUS.timer=null; }
-  if(MUS.master && MUS.ctx){ const t=MUS.ctx.currentTime; MUS.master.gain.cancelScheduledValues(t); MUS.master.gain.linearRampToValueAtTime(0,t+0.6); }
-  setTimeout(()=>{ MUS.nodes.forEach(n=>{ try{n.stop&&n.stop();}catch(e){} }); MUS.nodes=[]; }, 700);
+  if(MUS.master && MUS.ctx){
+    const t=MUS.ctx.currentTime;
+    MUS.master.gain.cancelScheduledValues(t);
+    MUS.master.gain.setValueAtTime(MUS.master.gain.value, t);
+    MUS.master.gain.linearRampToValueAtTime(0, t+0.6);
+  }
+  setTimeout(()=>{
+    if(MUS.on) return;
+    (MUS.slots||[]).forEach(s=>{ try{s.el.pause(); s.g.gain.value=0;}catch(e){} });
+    MUS.nodes.forEach(n=>{ try{n.stop&&n.stop();}catch(e){} }); MUS.nodes=[];
+    MUS.fallback=false;
+  }, 700);
 }
 function musToggle(on){
   MUS.on=on;
   $("#musBtn").setAttribute("aria-pressed", String(on));
   $("#musBtn").classList.toggle("on", on);
   $("#musVol").disabled=!on;
-  if(on) musBuild(); else musStop();
+  if(on) musStart(); else musStop();
 }
 $("#musBtn").addEventListener("click",()=>musToggle(!MUS.on));
-$("#musVol").addEventListener("input",()=>{ MUS.vol=$("#musVol").value/100; if(MUS.master) MUS.master.gain.value=MUS.vol*0.35; });
+$("#musVol").addEventListener("input",()=>{ MUS.vol=$("#musVol").value/100; if(MUS.on) musApplyVol(); });
 
 // gomb-ripple
 document.addEventListener("click", e=>{
