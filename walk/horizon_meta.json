@@ -1,0 +1,13 @@
+{
+  "source": "LRO LOLA 5 m/px south-polar DEM mosaic (ldem_87s_5mpp), Barker et al. 2021, NASA PGDA \u2014 downsampled to 40 m for the far-field skirt",
+  "grid": 251,
+  "extent_m": 10000.0,
+  "cell_m": 40.0,
+  "center_col": 19448,
+  "center_row": 21835,
+  "z_min": -1281.7650146484375,
+  "z_max": 1737.5509033203125,
+  "z_center": 1727.2462158203125,
+  "format": "horizon.bin: 251x251 Float32 LE, row-major, row 0 = north, col 0 = west, Z metres MOON_ME. Same origin as heightmap.bin.",
+  "curvature_note": "Runtime applies spherical drop d^2/(2R) for a true horizon."
+}
