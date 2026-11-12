@@ -465,7 +465,7 @@ button.cargo-src.as-btn{background:none;border:0;border-bottom:1px solid transpa
   .comp-bar{height:9px}
 }
 
-/* HUD theme v0.8.0 — Pixflow-inspired spacecraft interface.
+/* HUD theme v0.8.1 — Pixflow-inspired spacecraft interface.
    UI font: Barlow Condensed (SIL OFL 1.1). Readouts: Share Tech Mono (SIL OFL 1.1).
    Palette 4: Arctic cyan-white (#bff4ff accent / #7ee0f2 secondary).
    License files live in /fonts next to this source. */
@@ -1294,7 +1294,55 @@ a:hover{text-decoration-color:var(--accent-2)}
     text-transform:uppercase;
   }
   .hud-screen{inset:4px}
+
+  /* Heat / data / sky plates: content-sized, sitting above #gRead.
+     The desktop HUD rule sets top+width; the older mobile rule still sets
+     left+bottom. Together they stretched an empty chamfered plate over
+     most of the globe and slid the colorbar under the site card. */
+  #gHeat, #gData, #gSky{
+    top:auto;
+    left:12px;
+    right:12px;
+    bottom:68px;
+    width:auto;
+    height:auto;
+    max-height:42%;
+    overflow-x:hidden;
+    overflow-y:auto;
+    padding:7px 10px 8px;
+  }
+  #gHeat .hk{display:none}
+  #gSky{max-height:28%}
+  /* When a colorbar is already at the bottom, stack the sky card just above it
+     instead of parking it on top of the site card. */
+  #globeWrap.sky-on.heat-on #gSky{
+    top:auto;
+    left:12px;
+    right:12px;
+    width:auto;
+    height:auto;
+    max-height:28%;
+    bottom:140px; /* 68 (#gRead gap) + ~58 (heat plate) + 14 */
+  }
+  #globeWrap.sky-on.data-on #gSky{
+    top:auto;
+    left:12px;
+    right:12px;
+    width:auto;
+    height:auto;
+    max-height:28%;
+    bottom:184px; /* data plates are taller (~80–100px) */
+  }
+  #gMenuBtn{
+    position:absolute;
+    right:12px;
+    top:12px;
+    left:auto;
+    bottom:auto;
+    z-index:8;
+  }
 }
+
 
 /* ===== button press: glow pulse + 0.97 scale + ring/scanline from click ===== */
 .btn, .seg button, .cargo-tab, .cargo-use, .cargo-add, .cargo-rm,
@@ -1303,6 +1351,11 @@ a:hover{text-decoration-color:var(--accent-2)}
   position:relative;
   transition:transform .12s ease, filter .18s ease, background-color .15s ease, color .15s ease, border-color .15s ease, box-shadow .18s ease;
 }
+/* Hamburger must stay absolutely placed in #globeWrap; relative pulled it into
+   flow at the top-left and put it under the site-card plate. press-flash still
+   works — absolute is a containing block. */
+#gMenuBtn{position:absolute}
+
 .btn:active, .seg button:active, .cargo-tab:active, .cargo-use:active,
 .cargo-add:active, .cargo-rm:active,
 #fsBtn:active, #sfxBtn:active, #musBtn:active, #srcBtn:active,
@@ -1379,7 +1432,7 @@ a:hover{text-decoration-color:var(--accent-2)}
 </style>
 </head><body>
 <header>
- <div class="brand"><h1 data-i18n="h1" data-i18n-html>Kis Lépés – Új határok a Holdon</h1><div class="tag" data-i18n="tag">Holdi kolónia-kalkulátor · v0.8.0 · forrásolt becslés, nem mérnöki terv</div></div>
+ <div class="brand"><h1 data-i18n="h1" data-i18n-html>Kis Lépés – Új határok a Holdon</h1><div class="tag" data-i18n="tag">Holdi kolónia-kalkulátor · v0.8.1 · forrásolt becslés, nem mérnöki terv</div></div>
  <div class="clock" id="clockBox">
   <span class="led" id="clockLive" data-i18n-title="clockLive" title="Élő idő"></span>
   <label class="sr" for="datePick" data-i18n="dateLbl">Időpont</label>
@@ -1559,7 +1612,7 @@ a:hover{text-decoration-color:var(--accent-2)}
  </aside>
 </div>
 
-<footer><span data-i18n="footerL">Holdi kolónia-kalkulátor · v0.8.0 · Pásztor Bence számára</span><span data-i18n="footerR">Felszíni adatok: NASA/GSFC/ASU, LRO</span></footer>
+<footer><span data-i18n="footerL">Holdi kolónia-kalkulátor · v0.8.1 · Pásztor Bence számára</span><span data-i18n="footerR">Felszíni adatok: NASA/GSFC/ASU, LRO</span></footer>
 <div id="tip"></div>
 <div id="ksTip" hidden role="tooltip"></div>
 <div id="mBar"><div class="mBarMain"><div id="mBarTxt"></div><div id="mBarCargo" hidden></div></div><button type="button" id="mBarBtn" data-i18n="mBarBtn">Részletek ↓</button></div>
@@ -3041,8 +3094,8 @@ function setLang(lang, opts){
 // ---------- UI STRINGS ----------
 _i("title", "Kis Lépés – Új határok a Holdon · Holdi kolónia-kalkulátor", "Small Step – Lunar Frontier · Lunar Colony Calculator");
 _i("h1", "Kis Lépés – Új határok a Holdon", "Small Step – Lunar Frontier");
-_i("tag", "Holdi kolónia-kalkulátor · v0.8.0 · forrásolt becslés, nem mérnöki terv", "Lunar Colony Calculator · v0.8.0 · sourced estimate, not an engineering design");
-_i("footerL", "Holdi kolónia-kalkulátor · v0.8.0 · Pásztor Bence számára", "Lunar Colony Calculator · v0.8.0 · for Pásztor Bence");
+_i("tag", "Holdi kolónia-kalkulátor · v0.8.1 · forrásolt becslés, nem mérnöki terv", "Lunar Colony Calculator · v0.8.1 · sourced estimate, not an engineering design");
+_i("footerL", "Holdi kolónia-kalkulátor · v0.8.1 · Pásztor Bence számára", "Lunar Colony Calculator · v0.8.1 · for Pásztor Bence");
 _i("footerR", "Felszíni adatok: NASA/GSFC/ASU, LRO", "Surface data: NASA/GSFC/ASU, LRO");
 _i("srcBtn", "Források", "Sources");
 _i("srcH", "Források", "Sources");
