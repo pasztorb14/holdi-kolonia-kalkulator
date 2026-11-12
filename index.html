@@ -465,7 +465,7 @@ button.cargo-src.as-btn{background:none;border:0;border-bottom:1px solid transpa
   .comp-bar{height:9px}
 }
 
-/* HUD theme v0.8.1 — Pixflow-inspired spacecraft interface.
+/* HUD theme v0.8.2 — Pixflow-inspired spacecraft interface.
    UI font: Barlow Condensed (SIL OFL 1.1). Readouts: Share Tech Mono (SIL OFL 1.1).
    Palette 4: Arctic cyan-white (#bff4ff accent / #7ee0f2 secondary).
    License files live in /fonts next to this source. */
@@ -1344,95 +1344,135 @@ a:hover{text-decoration-color:var(--accent-2)}
 }
 
 
-/* ===== button press: glow pulse + 0.97 scale + ring/scanline from click ===== */
-.btn, .seg button, .cargo-tab, .cargo-use, .cargo-add, .cargo-rm,
-#fsBtn, #sfxBtn, #musBtn, #srcBtn, #dateNow, #heatPlay, #gMenuBtn, #mBar button,
+/* ===== button press: the whole control flashes Arctic, ~360ms =====
+   No click-point ring. Glow uses filter:drop-shadow so it follows chamfered
+   clip-path (box-shadow would be clipped). Dark ink on the fill keeps labels
+   readable. #gMenuBtn stays position:absolute — do not set it relative. */
+.btn, .seg button, .cargo-tab, .cargo-use, .cargo-add, .cargo-rm, .cargo-chip,
+#fsBtn, #sfxBtn, #musBtn, #srcBtn, #dateNow, #heatPlay, #mBar button,
 .cat>summary, .acc>summary{
   position:relative;
-  transition:transform .12s ease, filter .18s ease, background-color .15s ease, color .15s ease, border-color .15s ease, box-shadow .18s ease;
+  transition:background-color .28s ease, color .28s ease, border-color .28s ease, filter .32s ease, transform .12s ease;
 }
-/* Hamburger must stay absolutely placed in #globeWrap; relative pulled it into
-   flow at the top-left and put it under the site-card plate. press-flash still
-   works — absolute is a containing block. */
+/* Hamburger must stay absolutely placed in #globeWrap. */
 #gMenuBtn{position:absolute}
 
+.btn.is-press, .seg button.is-press, .cargo-tab.is-press, .cargo-use.is-press,
+.cargo-add.is-press, .cargo-rm.is-press, .cargo-chip.is-press,
+#fsBtn.is-press, #sfxBtn.is-press, #musBtn.is-press, #srcBtn.is-press,
+#dateNow.is-press, #heatPlay.is-press, #gMenuBtn.is-press, #mBar button.is-press,
+.cat>summary.is-press, .acc>summary.is-press,
 .btn:active, .seg button:active, .cargo-tab:active, .cargo-use:active,
-.cargo-add:active, .cargo-rm:active,
+.cargo-add:active, .cargo-rm:active, .cargo-chip:active,
 #fsBtn:active, #sfxBtn:active, #musBtn:active, #srcBtn:active,
-#dateNow:active, #heatPlay:active, #gMenuBtn:active, #mBar button:active{
-  transform:scale(0.97);
-  filter:drop-shadow(0 0 8px rgba(191,244,255,.7)) drop-shadow(0 0 16px rgba(191,244,255,.35));
-}
+#dateNow:active, #heatPlay:active, #gMenuBtn:active, #mBar button:active,
 .cat>summary:active, .acc>summary:active{
-  transform:scale(0.99);
-  filter:drop-shadow(0 0 10px rgba(191,244,255,.45));
+  /* Snap on (no transition) so the flash is immediate; fade is the base transition once the class drops. */
+  transition:none;
+  background-color:#bff4ff !important;
+  background-image:none !important;
+  color:#071014 !important;
+  border-color:#fff !important;
+  text-shadow:none !important;
+  filter:
+    drop-shadow(0 0 3px #fff)
+    drop-shadow(0 0 8px rgba(191,244,255,1))
+    drop-shadow(0 0 18px rgba(191,244,255,.85))
+    drop-shadow(0 0 32px rgba(126,224,242,.55));
 }
-.press-flash{
+/* Already-filled Arctic controls still need a visible blink — go near-white. */
+.btn.on.is-press, .btn[aria-pressed="true"].is-press,
+.seg button.on.is-press, .cargo-tab.on.is-press, .cargo-use.on.is-press,
+#fsBtn.on.is-press, #sfxBtn.on.is-press, #musBtn.on.is-press,
+.btn.on:active, .seg button.on:active, .cargo-tab.on:active, .cargo-use.on:active,
+#fsBtn.on:active, #sfxBtn.on:active, #musBtn.on:active{
+  background-color:#eefcff !important;
+  color:#071014 !important;
+  filter:
+    drop-shadow(0 0 4px #fff)
+    drop-shadow(0 0 12px rgba(191,244,255,1))
+    drop-shadow(0 0 24px rgba(191,244,255,.9))
+    drop-shadow(0 0 40px rgba(126,224,242,.6));
+}
+/* Icons follow the dark ink. */
+.is-press svg, :is(.btn,.seg button,#fsBtn,#sfxBtn,#musBtn,#gMenuBtn,#heatPlay):active svg{
+  color:#071014;
+  stroke:currentColor;
+}
+
+/* Quick light sweep across the whole button (not from the click point). */
+.press-sweep{
   position:absolute;
-  width:12px; height:12px;
-  border-radius:50%;
-  border:1px solid var(--accent);
-  box-shadow:0 0 10px rgba(191,244,255,.85), 0 0 22px rgba(191,244,255,.4);
+  inset:-1px;
   pointer-events:none;
-  z-index:8;
-  transform:translate(-50%,-50%) scale(.35);
-  animation:pressRing .26s ease-out forwards;
+  z-index:9;
+  border-radius:inherit;
+  background:linear-gradient(
+    115deg,
+    transparent 0%,
+    transparent 38%,
+    rgba(255,255,255,.15) 46%,
+    rgba(255,255,255,.75) 50%,
+    rgba(255,255,255,.15) 54%,
+    transparent 62%,
+    transparent 100%
+  );
+  background-size:250% 100%;
+  background-position:130% 0;
+  animation:pressSweep .36s ease-out forwards;
 }
-.press-scan{
-  position:absolute;
-  left:0; right:0; height:2px;
-  margin-top:-1px;
-  background:linear-gradient(90deg, transparent 0%, var(--accent) 35%, #fff 50%, var(--accent) 65%, transparent 100%);
-  box-shadow:0 0 10px var(--accent);
-  pointer-events:none;
-  z-index:8;
-  animation:pressScan .24s ease-out forwards;
-  opacity:0;
-}
-.press-flash.is-mid{
+.press-sweep.is-mid,
+.is-press-mid .press-sweep{
   animation:none;
-  opacity:.95;
-  transform:translate(-50%,-50%) scale(3.2);
-  background:transparent;
+  background-position:46% 0;
+  opacity:1;
 }
-.press-scan.is-mid{
-  animation:none;
-  opacity:.9;
-  transform:scaleX(.85);
-  top:42%;
+@keyframes pressSweep{
+  0%{background-position:130% 0; opacity:1}
+  100%{background-position:-30% 0; opacity:.35}
 }
-@keyframes pressRing{
-  0%{opacity:1; transform:translate(-50%,-50%) scale(.35)}
-  70%{opacity:.7}
-  100%{opacity:0; transform:translate(-50%,-50%) scale(16)}
-}
-@keyframes pressScan{
-  0%{opacity:1; transform:scaleX(.15); top:50%}
-  100%{opacity:0; transform:scaleX(1); top:8%}
+
+/* Frozen mid-flash frame for captures. */
+.is-press-mid{
+  transition:none;
+  background-color:#bff4ff !important;
+  background-image:none !important;
+  color:#071014 !important;
+  border-color:#fff !important;
+  text-shadow:none !important;
+  filter:
+    drop-shadow(0 0 3px #fff)
+    drop-shadow(0 0 10px rgba(191,244,255,1))
+    drop-shadow(0 0 20px rgba(191,244,255,.9))
+    drop-shadow(0 0 36px rgba(126,224,242,.55));
 }
 
 @media (prefers-reduced-motion:reduce){
   .hud-rings .spin, .hud-scan{animation:none}
-  .press-flash, .press-scan{display:none !important; animation:none !important}
-  .btn, .seg button, .cargo-tab, .cargo-use, .cargo-add, .cargo-rm,
-  #fsBtn, #sfxBtn, #musBtn, #srcBtn, #dateNow, #heatPlay, #gMenuBtn, #mBar button,
+  .press-sweep{display:none !important; animation:none !important}
+  .btn, .seg button, .cargo-tab, .cargo-use, .cargo-add, .cargo-rm, .cargo-chip,
+  #fsBtn, #sfxBtn, #musBtn, #srcBtn, #dateNow, #heatPlay, #mBar button,
   .cat>summary, .acc>summary{
-    transition:background-color .15s ease, color .15s ease, border-color .15s ease;
+    transition:background-color .1s ease, color .1s ease, border-color .1s ease, filter .12s ease;
   }
+  .is-press, .is-press-reduce,
   .btn:active, .seg button:active, .cargo-tab:active, .cargo-use:active,
   .cargo-add:active, .cargo-rm:active,
   #fsBtn:active, #sfxBtn:active, #musBtn:active, #srcBtn:active,
   #dateNow:active, #heatPlay:active, #gMenuBtn:active, #mBar button:active,
   .cat>summary:active, .acc>summary:active{
     transform:none;
-    filter:none;
-    box-shadow:0 0 0 1px var(--accent);
+    filter:drop-shadow(0 0 8px rgba(191,244,255,.8));
+    background-color:#bff4ff !important;
+    background-image:none !important;
+    color:#071014 !important;
+    border-color:#fff !important;
   }
 }
 </style>
 </head><body>
 <header>
- <div class="brand"><h1 data-i18n="h1" data-i18n-html>Kis Lépés – Új határok a Holdon</h1><div class="tag" data-i18n="tag">Holdi kolónia-kalkulátor · v0.8.1 · forrásolt becslés, nem mérnöki terv</div></div>
+ <div class="brand"><h1 data-i18n="h1" data-i18n-html>Kis Lépés – Új határok a Holdon</h1><div class="tag" data-i18n="tag">Holdi kolónia-kalkulátor · v0.8.2 · forrásolt becslés, nem mérnöki terv</div></div>
  <div class="clock" id="clockBox">
   <span class="led" id="clockLive" data-i18n-title="clockLive" title="Élő idő"></span>
   <label class="sr" for="datePick" data-i18n="dateLbl">Időpont</label>
@@ -1612,7 +1652,7 @@ a:hover{text-decoration-color:var(--accent-2)}
  </aside>
 </div>
 
-<footer><span data-i18n="footerL">Holdi kolónia-kalkulátor · v0.8.1 · Pásztor Bence számára</span><span data-i18n="footerR">Felszíni adatok: NASA/GSFC/ASU, LRO</span></footer>
+<footer><span data-i18n="footerL">Holdi kolónia-kalkulátor · v0.8.2 · Pásztor Bence számára</span><span data-i18n="footerR">Felszíni adatok: NASA/GSFC/ASU, LRO</span></footer>
 <div id="tip"></div>
 <div id="ksTip" hidden role="tooltip"></div>
 <div id="mBar"><div class="mBarMain"><div id="mBarTxt"></div><div id="mBarCargo" hidden></div></div><button type="button" id="mBarBtn" data-i18n="mBarBtn">Részletek ↓</button></div>
@@ -3094,8 +3134,8 @@ function setLang(lang, opts){
 // ---------- UI STRINGS ----------
 _i("title", "Kis Lépés – Új határok a Holdon · Holdi kolónia-kalkulátor", "Small Step – Lunar Frontier · Lunar Colony Calculator");
 _i("h1", "Kis Lépés – Új határok a Holdon", "Small Step – Lunar Frontier");
-_i("tag", "Holdi kolónia-kalkulátor · v0.8.1 · forrásolt becslés, nem mérnöki terv", "Lunar Colony Calculator · v0.8.1 · sourced estimate, not an engineering design");
-_i("footerL", "Holdi kolónia-kalkulátor · v0.8.1 · Pásztor Bence számára", "Lunar Colony Calculator · v0.8.1 · for Pásztor Bence");
+_i("tag", "Holdi kolónia-kalkulátor · v0.8.2 · forrásolt becslés, nem mérnöki terv", "Lunar Colony Calculator · v0.8.2 · sourced estimate, not an engineering design");
+_i("footerL", "Holdi kolónia-kalkulátor · v0.8.2 · Pásztor Bence számára", "Lunar Colony Calculator · v0.8.2 · for Pásztor Bence");
 _i("footerR", "Felszíni adatok: NASA/GSFC/ASU, LRO", "Surface data: NASA/GSFC/ASU, LRO");
 _i("srcBtn", "Források", "Sources");
 _i("srcH", "Források", "Sources");
@@ -10824,7 +10864,7 @@ function cargoInit(){
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", cargoInit);
 else cargoInit();
 </script>
-<script>/* HUD chrome v0.8.0 — rings, viewfinder, screen brackets, button press flash. */
+<script>/* HUD chrome v0.8.2 — rings, viewfinder, screen brackets, button press flash. */
 (function(){
   const $ = (s, r=document) => r.querySelector(s);
   const reduce = () => !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
@@ -10929,31 +10969,41 @@ else cargoInit();
     if(!n||!n.closest) return null;
     if(n.closest("#globe, canvas#globe, #globeWrap > canvas, #glbView, #polar")) return null;
     if(n.closest("input, textarea, select, option, a")) return null;
-    const hit=n.closest("button, .btn, .cargo-tab, .seg button, summary, .cargo-use, .cargo-add, .cargo-rm, [role='tab'], [role='switch'], [role='radio']");
+    const hit=n.closest("button, .btn, .cargo-tab, .seg button, summary, .cargo-use, .cargo-add, .cargo-rm, .cargo-chip, [role='tab'], [role='switch'], [role='radio']");
     if(!hit) return null;
     if(hit.disabled||hit.getAttribute("aria-disabled")==="true") return null;
     return hit;
   }
 
   let lastFlash=0, lastHit=null;
-  function pressFlash(e, hit){
-    if(reduce()) return;
+  const PRESS_MS=360, PRESS_REDUCE_MS=130;
+
+  function clearPress(hit){
+    if(!hit) return;
+    hit.classList.remove("is-press","is-press-mid","is-press-reduce");
+    hit.querySelectorAll(".press-sweep").forEach(n=>n.remove());
+    if(hit._pressT){ clearTimeout(hit._pressT); hit._pressT=null; }
+  }
+
+  function pressFlash(hit, mid){
+    if(!hit) return;
     const now=performance.now();
-    if(hit===lastHit && now-lastFlash<50) return;
+    if(!mid && hit===lastHit && now-lastFlash<50) return;
     lastFlash=now; lastHit=hit;
-    const r=hit.getBoundingClientRect();
-    const x=(Number.isFinite(e.clientX)?e.clientX:r.left+r.width/2)-r.left;
-    const y=(Number.isFinite(e.clientY)?e.clientY:r.top+r.height/2)-r.top;
-    const ring=document.createElement("span");
-    ring.className="press-flash";
-    ring.style.left=x+"px";
-    ring.style.top=y+"px";
-    const scan=document.createElement("span");
-    scan.className="press-scan";
-    scan.style.top=y+"px";
-    hit.appendChild(ring);
-    hit.appendChild(scan);
-    setTimeout(()=>{ ring.remove(); scan.remove(); }, 320);
+    clearPress(hit);
+    const reduced=reduce();
+    hit.classList.add("is-press");
+    if(reduced) hit.classList.add("is-press-reduce");
+    if(mid) hit.classList.add("is-press-mid");
+    if(!reduced){
+      const sweep=document.createElement("span");
+      sweep.className="press-sweep"+(mid?" is-mid":"");
+      sweep.setAttribute("aria-hidden","true");
+      hit.appendChild(sweep);
+    }
+    if(mid) return;
+    const dur=reduced?PRESS_REDUCE_MS:PRESS_MS;
+    hit._pressT=setTimeout(()=>clearPress(hit), dur);
   }
 
   function pressInit(){
@@ -10961,36 +11011,22 @@ else cargoInit();
       if(e.button!=null && e.button!==0) return;
       if(e.pointerType && e.pointerType!=="mouse" && e.pointerType!=="touch" && e.pointerType!=="pen") return;
       const hit=pressTarget(e);
-      if(hit) pressFlash(e, hit);
+      if(hit) pressFlash(hit);
     };
     document.addEventListener("pointerdown", go, {passive:true, capture:true});
     document.addEventListener("mousedown", go, {passive:true, capture:true});
     document.addEventListener("click", e=>{
       if(e.detail===0){
         const hit=pressTarget(e);
-        if(hit){
-          const r=hit.getBoundingClientRect();
-          pressFlash({clientX:r.left+r.width/2, clientY:r.top+r.height/2}, hit);
-        }
+        if(hit) pressFlash(hit);
       }
     });
     window.__hudPress = {
-      flash(el, x, y, mid){
+      flash(el, _x, _y, mid){
         if(!el) return;
-        const r=el.getBoundingClientRect();
-        const ev={clientX: x!=null?x:r.left+r.width/2, clientY: y!=null?y:r.top+r.height/2};
-        if(mid){
-          // static mid-animation frame (for captures)
-          el.querySelectorAll(".press-flash,.press-scan").forEach(n=>n.remove());
-          const ring=document.createElement("span"); ring.className="press-flash is-mid";
-          ring.style.left=(ev.clientX-r.left)+"px"; ring.style.top=(ev.clientY-r.top)+"px";
-          const scan=document.createElement("span"); scan.className="press-scan is-mid";
-          scan.style.top=(ev.clientY-r.top)+"px";
-          el.appendChild(ring); el.appendChild(scan);
-          return;
-        }
-        pressFlash(ev, el);
-      }
+        pressFlash(el, !!mid);
+      },
+      clear: clearPress
     };
   }
 
