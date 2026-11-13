@@ -213,6 +213,69 @@ main{position:relative;z-index:3;}
   margin-top:2.1rem;
   width:min(100%, 22rem);
 }
+.ctas-row{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:0.7rem;
+  width:100%;
+}
+.cta-offline-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  margin-top:0.15rem;
+}
+.cta-offline{
+  font-size:0.55rem;
+  letter-spacing:0.08em;
+  text-indent:0.06em;
+  min-height:38px;
+  padding:0.5rem 1rem;
+  background:transparent;
+  color:rgba(191,244,255,.88);
+  border:1px solid rgba(191,244,255,.38);
+  cursor:pointer;
+}
+.cta-offline:hover{border-color:rgba(191,244,255,.75);color:#fff}
+.cta-offline.is-busy{pointer-events:none;opacity:.9}
+.cta-offline.is-done{
+  color:var(--cyan);
+  border-color:var(--cyan);
+  cursor:default;
+}
+.cta-offline.is-error{border-color:#e08a8a;color:#ffd0d0}
+.offline-bar{
+  display:block;
+  width:100%;
+  height:3px;
+  margin-top:0.55rem;
+  background:rgba(191,244,255,.14);
+  overflow:hidden;
+}
+.offline-bar[hidden]{display:none}
+.offline-bar > i{
+  display:block;
+  height:100%;
+  width:0%;
+  background:var(--cyan);
+  box-shadow:0 0 8px rgba(191,244,255,.6);
+  transition:width .2s ease;
+}
+.offline-meta{
+  font-family:"Inter",sans-serif;
+  font-size:0.72rem;
+  letter-spacing:0.03em;
+  line-height:1.45;
+  color:var(--muted);
+  text-align:center;
+  margin:0.5rem 0 0;
+  text-transform:none;
+  min-height:1.15em;
+}
+.offline-meta.is-done{color:var(--cyan)}
+.offline-meta.is-error{color:#ffd0d0}
 .cta{
   --cut:7px;
   display:inline-flex;
@@ -280,7 +343,8 @@ main{position:relative;z-index:3;}
 .vision .block-h{
   /* same as others */
 }
-.vision p{max-width:32rem;margin:0 auto}
+.vision p{max-width:38rem;margin:0 auto}
+.vision p + p{margin-top:0.95rem}
 
 /* contact */
 .contact{
@@ -365,12 +429,21 @@ main{position:relative;z-index:3;}
       linear-gradient(90deg, rgba(0,0,0,.02) 0%, rgba(0,0,0,.22) 38%, rgba(0,0,0,.48) 55%, rgba(0,0,0,.22) 100%);
   }
   .ctas{
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    width:auto;
+    gap:0.85rem;
+  }
+  .ctas-row{
     flex-direction:row;
     justify-content:center;
     width:auto;
     gap:0.9rem;
   }
-  .cta{min-width:15.5rem;padding:0.9rem 1.5rem}
+  .ctas-row .cta{min-width:15.5rem;padding:0.9rem 1.5rem}
+  .cta-offline-wrap{width:100%;max-width:calc(31rem + 0.9rem);align-items:stretch}
+  .cta-offline{min-width:0;width:100%}
   .blocks{gap: clamp(2.8rem, 7vh, 4.4rem); padding-top:1rem; padding-bottom:3rem}
   .block{max-width:38rem}
   .hero{padding-bottom:4rem}
@@ -383,7 +456,7 @@ main{position:relative;z-index:3;}
 /* short landscape phones: don't force a full viewport hero */
 @media (max-height:520px) and (orientation:landscape){
   .hero{min-height:0;padding-top:4.2rem;padding-bottom:2rem}
-  .ctas{flex-direction:row;width:auto}
+  .ctas{flex-direction:column;align-items:center;width:auto}.ctas-row{flex-direction:row;width:auto}
 }
 
 /* X banner / poster mode: ?banner=1  (no CTAs, no language toggle) */
@@ -435,6 +508,65 @@ body.banner-mode .stars,
 body.banner-mode .moon-wrap{
   transform:none !important;
 }
+
+/* Walk-note popup: shown when "Walk the base" is pressed on the landing. */
+.walk-note{
+  position:fixed;inset:0;z-index:50;
+  display:flex;align-items:center;justify-content:center;
+  padding: max(1.2rem, env(safe-area-inset-top)) var(--pad) max(1.6rem, env(safe-area-inset-bottom));
+  background:rgba(0,0,0,.66);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.walk-note[hidden]{display:none}
+.walk-note-card{
+  --cut:10px;
+  width:min(100%, 34rem);
+  background:rgba(6,10,14,.94);
+  border:1px solid rgba(191,244,255,.38);
+  padding:1.7rem 1.45rem 1.45rem;
+  text-align:center;
+  color:var(--ink);
+  box-shadow:0 24px 70px rgba(0,0,0,.6), 0 0 0 1px rgba(191,244,255,.08), 0 0 40px rgba(191,244,255,.06);
+  clip-path:polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+}
+.walk-note-kicker{
+  font-family:"Michroma","Exo 2",sans-serif;
+  font-weight:400;
+  font-size:clamp(0.68rem, 2.2vw, 0.8rem);
+  letter-spacing:0.28em;
+  text-indent:0.28em;
+  text-transform:uppercase;
+  color:var(--cyan);
+  margin:0 0 0.95rem;
+}
+.walk-note-msg{
+  font-family:"Inter",system-ui,sans-serif;
+  font-size:clamp(0.98rem, 2.7vw, 1.12rem);
+  line-height:1.6;
+  color:rgba(244,246,248,.92);
+  margin:0 0 1.55rem;
+  text-wrap:balance;
+}
+.walk-note-actions{
+  display:flex;
+  flex-direction:column;
+  gap:0.7rem;
+  align-items:stretch;
+}
+.walk-note-actions .cta{width:100%;min-height:48px}
+@media (min-width:620px){
+  .walk-note-actions{
+    flex-direction:row;
+    justify-content:center;
+    align-items:stretch;
+  }
+  .walk-note-actions .cta{width:auto;min-width:13.5rem;flex:1}
+}
+@media (prefers-reduced-motion:reduce){
+  .walk-note{backdrop-filter:none;-webkit-backdrop-filter:none}
+}
+body.note-open{overflow:hidden}
 </style>
 </head>
 <body>
@@ -464,8 +596,15 @@ body.banner-mode .moon-wrap{
       <hr class="rule reveal d3">
       <p class="tag reveal d4" data-i="tag">From an idea to a lunar civilization</p>
       <div class="ctas reveal d5">
-        <a class="cta cta-primary" id="ctaCalc" href="../#lang=en" data-i="ctaCalc">Open the calculator</a>
-        <a class="cta cta-ghost" id="ctaWalk" href="../#lang=en&amp;walk=1" data-i="ctaWalk">Walk the base</a>
+        <div class="ctas-row">
+          <a class="cta cta-primary" id="ctaCalc" href="../#lang=en" data-i="ctaCalc">Open the calculator</a>
+          <a class="cta cta-ghost" id="ctaWalk" href="../#lang=en&amp;walk=1" data-i="ctaWalk">Walk the base</a>
+        </div>
+        <div class="cta-offline-wrap">
+          <button type="button" class="cta cta-offline" id="ctaOffline" data-i="ctaOffline">Download for offline use</button>
+          <div class="offline-bar" id="offlineBar" hidden><i id="offlineBarFill"></i></div>
+          <p class="offline-meta" id="offlineMeta" aria-live="polite"></p>
+        </div>
       </div>
     </header>
 
@@ -492,7 +631,8 @@ body.banner-mode .moon-wrap{
       </section>
       <section class="block vision">
         <h2 data-i="vH">Our Vision</h2>
-        <p data-i="vP">Countless people have ideas but no way to prove them. We want to give everyone the opportunity to test theirs.</p>
+        <p data-i="vOpen">This platform is just the first step. We want to build a 3D simulator that is realistic both scientifically and visually, where anyone can experience what it might be like to live on the Moon and found a colony there.</p>
+        <p data-i="vClose">Countless people have ideas but no way to prove them. We want to give everyone the opportunity to test their own and show it to the wide World.</p>
       </section>
     </div>
 
@@ -504,6 +644,17 @@ body.banner-mode .moon-wrap{
       </a>
       <p class="credit" data-i="credit">Moon texture: NASA SVS</p>
     </footer>
+
+    <div class="walk-note" id="walkNote" hidden role="dialog" aria-modal="true" aria-labelledby="walkNoteKicker" aria-describedby="walkNoteMsg">
+      <div class="walk-note-card">
+        <p class="walk-note-kicker" id="walkNoteKicker" data-i="walkNoteKicker">Note</p>
+        <p class="walk-note-msg" id="walkNoteMsg" data-i="walkNote">Note: in the calculator you can change the equipment to be shipped before you step onto the lunar surface.</p>
+        <div class="walk-note-actions">
+          <a class="cta cta-primary" id="walkNoteGo" href="../#lang=en&amp;walk=1" data-i="walkNoteGo">Continue to the walk</a>
+          <a class="cta cta-ghost" id="walkNoteCalc" href="../#lang=en" data-i="walkNoteCalc">Open the calculator first</a>
+        </div>
+      </div>
+    </div>
   </main>
 
 <script src="../contact-config.js"></script>
@@ -523,13 +674,26 @@ body.banner-mode .moon-wrap{
       tag: "From an idea to a lunar civilization",
       ctaCalc: "Open the calculator",
       ctaWalk: "Walk the base",
+      ctaOffline: "Download for offline use",
+      offlineProgress: "Downloading {done}/{total} · {mb} / {totalMb} MB",
+      offlineDone: "Ready, works offline",
+      offlineError: "Download failed. Check the connection and try again.",
+      offlineQuota: "Not enough storage (need {need} MB, free {free} MB).",
+      offlineEstimate: "About {mb} MB. Free space: {free} MB.",
+      offlinePartial: "Continue download ({have}/{total})",
       fH: "Foundation", fP: "Refine our existing lunar colony calculator. Improve scientific accuracy and assumptions.",
       mH: "The Moon", mP: "Integrate real lunar terrain and environmental data. Create a realistic, interactive 3D world.",
       sH: "The Simulator", sP: "Model energy, resources, habitats and logistics. Design, build and test lunar settlements.",
       oH: "Open Frontier", oP: "Open the simulator to people worldwide. Let anyone develop, test and share ideas.",
-      vH: "Our Vision", vP: "Countless people have ideas but no way to prove them. We want to give everyone the opportunity to test theirs.",
+      vH: "Our Vision",
+      vOpen: "This platform is just the first step. We want to build a 3D simulator that is realistic both scientifically and visually, where anyone can experience what it might be like to live on the Moon and found a colony there.",
+      vClose: "Countless people have ideas but no way to prove them. We want to give everyone the opportunity to test their own and show it to the wide World.",
       credit: "Moon texture: NASA SVS",
-      langAria: "Language"
+      langAria: "Language",
+      walkNoteKicker: "Note",
+      walkNote: "Note: in the calculator you can change the equipment to be shipped before you step onto the lunar surface.",
+      walkNoteGo: "Continue to the walk",
+      walkNoteCalc: "Open the calculator first"
     },
     hu: {
       title: "SmallStep. – Új határok a Holdon",
@@ -537,13 +701,26 @@ body.banner-mode .moon-wrap{
       tag: "Egy ötlettől egy holdi civilizációig",
       ctaCalc: "A kalkulátor megnyitása",
       ctaWalk: "Séta a bázison",
+      ctaOffline: "Letöltés offline használatra",
+      offlineProgress: "Letöltés {done}/{total} · {mb} / {totalMb} MB",
+      offlineDone: "Kész, offline is működik",
+      offlineError: "A letöltés nem sikerült. Ellenőrizze a kapcsolatot, és próbálja újra.",
+      offlineQuota: "Nincs elég tárhely (kell: {need} MB, szabad: {free} MB).",
+      offlineEstimate: "Kb. {mb} MB. Szabad hely: {free} MB.",
+      offlinePartial: "Letöltés folytatása ({have}/{total})",
       fH: "Alapozás", fP: "Finomítjuk a meglévő holdi kolónia-kalkulátort. Javítjuk a tudományos pontosságot és a feltevéseket.",
       mH: "A Hold", mP: "Valós holdi terep- és környezeti adatokat építünk be. Realisztikus, interaktív 3D világot hozunk létre.",
       sH: "A szimulátor", sP: "Energiát, erőforrásokat, élőhelyeket és logisztikát modellezünk. Holdi településeket tervezünk, építünk és tesztelünk.",
       oH: "Nyitott határvidék", oP: "A szimulátort megnyitjuk a világ előtt. Bárki fejleszthet, tesztelhet és megoszthat ötleteket.",
-      vH: "A jövőképünk", vP: "Számtalan embernek vannak ötletei, de nincs módja bebizonyítani őket. Mindenkinek lehetőséget akarunk adni, hogy a sajátját tesztelhesse.",
+      vH: "A jövőképünk",
+      vOpen: "Ez a felület most az első lépés. Létre szeretnénk hozni egy tudományosan és látványosan is valósághű 3D szimulátort, amelyben bárki kipróbálhatja, hogy milyen lehet a Holdon élni, és ott kolóniát alapítani.",
+      vClose: "Számtalan embernek vannak ötletei, de nincs módja bebizonyítani őket. Mindenkinek lehetőséget akarunk adni, hogy a sajátját tesztelhesse és megmutathassa a nagy Világnak.",
       credit: "Holdtextúra: NASA SVS",
-      langAria: "Nyelv"
+      langAria: "Nyelv",
+      walkNoteKicker: "Megjegyzés",
+      walkNote: "Megjegyzés: a kalkulátorban tudja módosítani a szállítandó eszközöket, mielőtt a Hold felszínére lép.",
+      walkNoteGo: "Tovább a sétához",
+      walkNoteCalc: "Előbb a kalkulátort nyitom meg"
     }
   };
 
@@ -568,10 +745,16 @@ body.banner-mode .moon-wrap{
     document.title = t.title;
     document.querySelectorAll("[data-i]").forEach(function(el){
       var k = el.getAttribute("data-i");
+      if (k === "ctaOffline" && window.__offlinePaint) return;
       if (t[k]) el.textContent = t[k];
     });
+    if (window.__offlinePaint) window.__offlinePaint();
     document.getElementById("ctaCalc").href = "../#lang=" + lang;
     document.getElementById("ctaWalk").href = "../#lang=" + lang + "&walk=1";
+    var walkGo = document.getElementById("walkNoteGo");
+    var walkCalc = document.getElementById("walkNoteCalc");
+    if (walkGo) walkGo.href = "../#lang=" + lang + "&walk=1";
+    if (walkCalc) walkCalc.href = "../#lang=" + lang;
     document.getElementById("langEN").setAttribute("aria-pressed", String(lang==="en"));
     document.getElementById("langHU").setAttribute("aria-pressed", String(lang==="hu"));
     var group = document.querySelector(".lang");
@@ -583,6 +766,46 @@ body.banner-mode .moon-wrap{
     b.addEventListener("click", function(){ apply(b.getAttribute("data-lang")); });
   });
   apply(lang);
+
+  /* Intercept "Walk the base" so the note is seen before leaving the landing. */
+  var note = document.getElementById("walkNote");
+  var ctaWalk = document.getElementById("ctaWalk");
+  var noteOpen = false;
+  var notePrevFocus = null;
+  function closeWalkNote(){
+    if (!note) return;
+    note.hidden = true;
+    noteOpen = false;
+    document.body.classList.remove("note-open");
+    if (notePrevFocus && notePrevFocus.focus) try { notePrevFocus.focus(); } catch(e){}
+    notePrevFocus = null;
+  }
+  function openWalkNote(e){
+    if (e) e.preventDefault();
+    if (!note) return;
+    notePrevFocus = document.activeElement;
+    note.hidden = false;
+    noteOpen = true;
+    document.body.classList.add("note-open");
+    var go = document.getElementById("walkNoteGo");
+    if (go) setTimeout(function(){ try { go.focus(); } catch(e){} }, 0);
+  }
+  if (ctaWalk) ctaWalk.addEventListener("click", openWalkNote);
+  if (note) {
+    note.addEventListener("click", function(e){
+      if (e.target === note) closeWalkNote();
+    });
+    document.addEventListener("keydown", function(e){
+      if (!noteOpen) return;
+      if (e.key === "Escape") { e.preventDefault(); closeWalkNote(); return; }
+      if (e.key !== "Tab") return;
+      var focusable = note.querySelectorAll("a.cta, button");
+      if (!focusable.length) return;
+      var first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+  }
 
   /* Contact from the shared config — X is live; empty fields stay hidden. */
   var C = window.CONTACT || {};
@@ -644,10 +867,221 @@ body.banner-mode .moon-wrap{
   }
 
   /* PWA: same worker as the calculator, scope is the repo root. */
+  function fmtMb(n){
+    if (!isFinite(n) || n < 0) return "–";
+    var mb = n / 1048576;
+    return (mb >= 10 ? mb.toFixed(0) : mb.toFixed(1)).replace(".", lang==="hu"?",":".");
+  }
+  function offlineTpl(key, vars){
+    var s = (I18N[lang] && I18N[lang][key]) || (I18N.en[key] || key);
+    Object.keys(vars || {}).forEach(function(k){
+      s = s.replace(new RegExp("\\{"+k+"\\}","g"), vars[k]);
+    });
+    return s;
+  }
+  var offBtn = document.getElementById("ctaOffline");
+  var offBar = document.getElementById("offlineBar");
+  var offFill = document.getElementById("offlineBarFill");
+  var offMeta = document.getElementById("offlineMeta");
+  var offState = { kind: "idle", have: 0, total: 0, bytes: 0, totalBytes: 0, free: null, error: null };
+
+  function paintOffline(){
+    if (!offBtn) return;
+    offBtn.classList.remove("is-busy","is-done","is-error");
+    if (offMeta){ offMeta.classList.remove("is-done","is-error"); }
+    var k = offState.kind;
+    if (k === "done"){
+      offBtn.classList.add("is-done");
+      offBtn.textContent = offlineTpl("offlineDone");
+      offBtn.disabled = true;
+      if (offBar) offBar.hidden = true;
+      if (offFill) offFill.style.width = "100%";
+      if (offMeta){ offMeta.textContent = ""; offMeta.classList.add("is-done"); }
+    } else if (k === "progress"){
+      offBtn.classList.add("is-busy");
+      offBtn.disabled = true;
+      offBtn.textContent = offlineTpl("offlineProgress", {
+        done: offState.have, total: offState.total,
+        mb: fmtMb(offState.bytes), totalMb: fmtMb(offState.totalBytes)
+      });
+      if (offBar) offBar.hidden = false;
+      if (offFill){
+        var p = offState.total ? (offState.have / offState.total) : (offState.totalBytes ? offState.bytes/offState.totalBytes : 0);
+        offFill.style.width = Math.min(100, Math.max(0, p*100)).toFixed(1) + "%";
+      }
+      if (offMeta){
+        var extra = (offState.free != null) ? offlineTpl("offlineEstimate", { mb: fmtMb(offState.totalBytes), free: fmtMb(offState.free) }) : "";
+        offMeta.textContent = extra;
+      }
+    } else if (k === "quota"){
+      offBtn.classList.add("is-error");
+      offBtn.disabled = false;
+      offBtn.textContent = offlineTpl("ctaOffline");
+      if (offBar) offBar.hidden = true;
+      if (offMeta){
+        offMeta.classList.add("is-error");
+        offMeta.textContent = offlineTpl("offlineQuota", {
+          need: fmtMb(offState.totalBytes), free: fmtMb(offState.free)
+        });
+      }
+    } else if (k === "error"){
+      offBtn.classList.add("is-error");
+      offBtn.disabled = false;
+      offBtn.textContent = offlineTpl("ctaOffline");
+      if (offBar) offBar.hidden = true;
+      if (offMeta){
+        offMeta.classList.add("is-error");
+        offMeta.textContent = offState.error || offlineTpl("offlineError");
+      }
+    } else if (k === "partial"){
+      offBtn.disabled = false;
+      offBtn.textContent = offlineTpl("offlinePartial", { have: offState.have, total: offState.total });
+      if (offBar) offBar.hidden = false;
+      if (offFill){
+        var p2 = offState.total ? offState.have/offState.total : 0;
+        offFill.style.width = Math.min(100, Math.max(0, p2*100)).toFixed(1) + "%";
+      }
+      if (offMeta){
+        offMeta.textContent = offlineTpl("offlineEstimate", { mb: fmtMb(offState.totalBytes), free: fmtMb(offState.free) });
+      }
+    } else {
+      offBtn.disabled = false;
+      offBtn.textContent = offlineTpl("ctaOffline");
+      if (offBar) offBar.hidden = true;
+      if (offMeta){
+        offMeta.textContent = (offState.totalBytes)
+          ? offlineTpl("offlineEstimate", { mb: fmtMb(offState.totalBytes), free: offState.free!=null?fmtMb(offState.free):"–" })
+          : "";
+      }
+    }
+  }
+  window.__offlinePaint = paintOffline;
+
+  function swTalk(type, onProgress){
+    return (async function(){
+      if (!("serviceWorker" in navigator)) throw new Error("no sw");
+      var reg = await navigator.serviceWorker.register("../sw.js", { scope: "../" });
+      var w = (reg.active || (await navigator.serviceWorker.ready).active);
+      if (!w) throw new Error("sw not active");
+      return new Promise(function(resolve, reject){
+        var ch = new MessageChannel();
+        var done = false;
+        var timer = setTimeout(function(){
+          if (!done){ done = true; reject(new Error("timeout")); }
+        }, 8*60*1000);
+        ch.port1.onmessage = function(ev){
+          var msg = ev.data || {};
+          if (msg.type === "progress"){
+            if (onProgress) onProgress(msg);
+            return;
+          }
+          done = true;
+          clearTimeout(timer);
+          resolve(msg);
+        };
+        try { w.postMessage({ type: type }, [ch.port2]); }
+        catch (err){ done = true; clearTimeout(timer); reject(err); }
+      });
+    })();
+  }
+
+  async function storageInfo(){
+    var out = { usage: null, quota: null, free: null, persisted: false };
+    try {
+      if (navigator.storage && navigator.storage.estimate){
+        var e = await navigator.storage.estimate();
+        out.usage = e.usage; out.quota = e.quota;
+        if (isFinite(e.quota) && isFinite(e.usage)) out.free = Math.max(0, e.quota - e.usage);
+      }
+    } catch (_){}
+    return out;
+  }
+
+  async function refreshOfflineStatus(){
+    var info = await storageInfo();
+    offState.free = info.free;
+    try {
+      var st = await swTalk("OFFLINE_STATUS");
+      if (st && st.ok){
+        offState.have = st.have; offState.total = st.total;
+        offState.bytes = st.haveBytes; offState.totalBytes = st.totalBytes;
+        if (st.complete) offState.kind = "done";
+        else if (st.started || st.beyond > 0) offState.kind = "partial";
+        else offState.kind = "idle";
+      }
+    } catch (_){
+      /* SW not ready yet: still show estimate from the manifest if we can. */
+      try {
+        var r = await fetch("../offline-manifest.json", { cache: "no-store" });
+        if (r.ok){
+          var man = await r.json();
+          offState.total = man.total; offState.totalBytes = man.totalBytes;
+        }
+      } catch(__){}
+    }
+    paintOffline();
+  }
+
+  async function startOfflineDownload(){
+    if (offState.kind === "done" || offState.kind === "progress") return;
+    offState.kind = "progress";
+    paintOffline();
+    try {
+      if (navigator.storage && navigator.storage.persist){
+        try { await navigator.storage.persist(); } catch(_){}
+      }
+      var info = await storageInfo();
+      offState.free = info.free;
+      paintOffline();
+      var result = await swTalk("OFFLINE_PRECACHE", function(msg){
+        offState.kind = "progress";
+        offState.have = msg.done; offState.total = msg.total;
+        offState.bytes = msg.bytes; offState.totalBytes = msg.totalBytes;
+        if (msg.error === "quota" || msg.phase === "quota"){
+          offState.kind = "quota";
+        }
+        paintOffline();
+      });
+      info = await storageInfo();
+      offState.free = info.free;
+      if (result && result.quota){
+        offState.kind = "quota";
+        offState.have = result.done; offState.total = result.total;
+        offState.bytes = result.bytes; offState.totalBytes = result.totalBytes;
+      } else if (result && result.ok){
+        offState.kind = "done";
+        offState.have = result.done; offState.total = result.total;
+        offState.bytes = result.bytes; offState.totalBytes = result.totalBytes;
+      } else {
+        offState.kind = (result && result.done > 0) ? "partial" : "error";
+        offState.have = result && result.done || offState.have;
+        offState.total = result && result.total || offState.total;
+        offState.bytes = result && result.bytes || offState.bytes;
+        offState.totalBytes = result && result.totalBytes || offState.totalBytes;
+        offState.error = offlineTpl("offlineError");
+      }
+    } catch (err){
+      offState.kind = "error";
+      offState.error = offlineTpl("offlineError");
+    }
+    paintOffline();
+  }
+
+  if (offBtn){
+    offBtn.addEventListener("click", function(e){
+      e.preventDefault();
+      startOfflineDownload();
+    });
+  }
+
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", function(){
-      navigator.serviceWorker.register("../sw.js", { scope: "../" }).catch(function(){});
+      navigator.serviceWorker.register("../sw.js", { scope: "../" })
+        .then(function(){ return refreshOfflineStatus(); })
+        .catch(function(){ refreshOfflineStatus(); });
     });
+  } else if (offMeta){
+    offMeta.textContent = "";
   }
 })();
 </script>
