@@ -1,0 +1,38 @@
+{
+  "name": "SmallStep. – Lunar Frontier",
+  "short_name": "SmallStep.",
+  "description": "A sourced lunar colony calculator. Pick a site, pack your cargo, walk the base.",
+  "start_url": "./start/",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#080a0c",
+  "theme_color": "#0a0d10",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
