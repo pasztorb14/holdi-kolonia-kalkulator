@@ -711,6 +711,20 @@ header .brand h1{
   line-height:1.1;
   color:#f1f3f6;
   text-transform:none;
+  display:flex;
+  align-items:center;
+  gap:.42em;
+  flex-wrap:wrap;
+}
+header .brand h1 img.brand-mark{
+  height:1.18em;
+  width:auto;
+  display:block;
+  flex:none;
+  transform:translateY(-0.04em);
+}
+header .brand h1 .brand-rest{
+  white-space:nowrap;
 }
 header .tag{
   font-family:var(--font-mono);
@@ -1938,7 +1952,7 @@ body.walk-mobile #walkHUD{ top: 40px; }
 </style>
 </head><body>
 <header>
- <div class="brand"><h1 data-i18n="h1" data-i18n-html>SmallStep. – Új határok a Holdon</h1><div class="tag" data-i18n="tag">Holdi kolónia-kalkulátor · v0.9.4 · forrásolt becslés, nem mérnöki terv</div></div>
+ <div class="brand"><h1 data-i18n="h1" data-i18n-html><img class="brand-mark" src="icons/smallstep-wordmark.png" alt="SmallStep." width="951" height="168"> <span class="brand-rest">– Új határok a Holdon</span></h1><div class="tag" data-i18n="tag">Holdi kolónia-kalkulátor · v0.9.5 · forrásolt becslés, nem mérnöki terv</div></div>
  <div class="clock" id="clockBox">
   <span class="led" id="clockLive" data-i18n-title="clockLive" title="Élő idő"></span>
   <label class="sr" for="datePick" data-i18n="dateLbl">Időpont</label>
@@ -2128,7 +2142,7 @@ body.walk-mobile #walkHUD{ top: 40px; }
  </aside>
 </div>
 
-<footer><span data-i18n="footerL">Holdi kolónia-kalkulátor · v0.9.4 · Shepherd Invest Kft.</span><span data-i18n="footerR">Felszíni adatok: NASA/GSFC/ASU, LRO</span></footer>
+<footer><span data-i18n="footerL">Holdi kolónia-kalkulátor · v0.9.5 · Shepherd Invest Kft.</span><span data-i18n="footerR">Felszíni adatok: NASA/GSFC/ASU, LRO</span></footer>
 <div id="tip"></div>
 <div id="ksTip" hidden role="tooltip"></div>
 <div id="mBar"><div class="mBarMain"><div id="mBarTxt"></div><div id="mBarCargo" hidden></div></div><button type="button" id="mBarBtn" data-i18n="mBarBtn">Részletek ↓</button></div>
@@ -3636,9 +3650,9 @@ function setLang(lang, opts){
 
 // ---------- UI STRINGS ----------
 _i("title", "SmallStep. – Új határok a Holdon · Holdi kolónia-kalkulátor", "SmallStep. – Lunar Frontier · Lunar Colony Calculator");
-_i("h1", "SmallStep. – Új határok a Holdon", "SmallStep. – Lunar Frontier");
-_i("tag", "Holdi kolónia-kalkulátor · v0.9.4 · forrásolt becslés, nem mérnöki terv", "Lunar Colony Calculator · v0.9.4 · sourced estimate, not an engineering design");
-_i("footerL", "Holdi kolónia-kalkulátor · v0.9.4 · Shepherd Invest Kft.", "Lunar Colony Calculator · v0.9.4 · Shepherd Invest Kft.");
+_i("h1", "<img class=\"brand-mark\" src=\"icons/smallstep-wordmark.png\" alt=\"SmallStep.\" width=\"951\" height=\"168\"> <span class=\"brand-rest\">– Új határok a Holdon</span>", "<img class=\"brand-mark\" src=\"icons/smallstep-wordmark.png\" alt=\"SmallStep.\" width=\"951\" height=\"168\"> <span class=\"brand-rest\">– Lunar Frontier</span>");
+_i("tag", "Holdi kolónia-kalkulátor · v0.9.5 · forrásolt becslés, nem mérnöki terv", "Lunar Colony Calculator · v0.9.5 · sourced estimate, not an engineering design");
+_i("footerL", "Holdi kolónia-kalkulátor · v0.9.5 · Shepherd Invest Kft.", "Lunar Colony Calculator · v0.9.5 · Shepherd Invest Kft.");
 _i("footerR", "Felszíni adatok: NASA/GSFC/ASU, LRO", "Surface data: NASA/GSFC/ASU, LRO");
 _i("srcBtn", "Források", "Sources");
 _i("srcH", "Források", "Sources");
@@ -4555,7 +4569,7 @@ _i("compOrb", (fe, ti) => LANG==="hu"
     (fe, ti) => `From orbit (Lunar Prospector GRS, Prettyman 2006, 2° pixels, ~150 km average): FeO ${fe}% / TiO₂ ${ti}%. For comparison only; the calculation uses the Apollo sample.`);
 
 
-/* v0.9.4 walk */
+/* v0.9.5 walk */
 _i("walkTitle", "Séta a bázison", "Walk the base");
 _i("walkLaunchHint", "Nyiss egy 1:1 léptékű, első személyű 3D nézetet az Összekötő gerincen (déli sarkvidék). A kijelölt rakomány a kiindulópont mellé kerül.", "Open a 1:1 first-person 3D view on Connecting Ridge (lunar south pole). Your selected cargo is placed near the starting point.");
 _i("walkExit", "Kilépés", "Exit");

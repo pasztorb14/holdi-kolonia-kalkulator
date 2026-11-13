@@ -15,10 +15,18 @@
 <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../icons/icon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="../icons/icon-192.png">
-<link rel="preload" href="fonts/Exo2-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Michroma-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="wordmark.png" as="image">
 <link rel="preload" href="moon-1280.webp" as="image">
 <style>
+@font-face{
+  font-family:"Michroma";
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+  src:url("fonts/Michroma-Regular.woff2") format("woff2");
+}
 @font-face{
   font-family:"Exo 2";
   font-weight:100 900;
@@ -129,10 +137,10 @@ a:hover{text-decoration:underline;text-underline-offset:3px}
 .lang button{
   appearance:none;border:0;background:transparent;
   color:var(--faint);
-  font-family:"Exo 2",sans-serif;
-  font-weight:600;
-  font-size:0.72rem;
-  letter-spacing:.18em;
+  font-family:"Michroma","Exo 2",sans-serif;
+  font-weight:400;
+  font-size:0.62rem;
+  letter-spacing:.16em;
   padding:0.48rem 0.72rem;
   cursor:pointer;
   min-width:44px;min-height:40px;
@@ -158,21 +166,22 @@ main{position:relative;z-index:3;}
   padding: calc(5.2rem + env(safe-area-inset-top)) var(--pad) 3rem;
 }
 .wordmark{
-  font-family:"Exo 2",sans-serif;
-  font-weight:650;
-  font-size:clamp(2.55rem, 11vw, 5.6rem);
-  letter-spacing:.04em;
-  line-height:0.95;
-  color:#fff;
-  text-shadow:0 2px 28px rgba(0,0,0,.55);
-  font-variation-settings:"wght" 650;
+  margin:0;
+  line-height:0;
+}
+.wordmark img{
+  width:min(88vw, 34rem);
+  max-width:100%;
+  height:auto;
+  margin:0 auto;
+  filter:drop-shadow(0 4px 22px rgba(0,0,0,.55));
 }
 .sub{
-  font-family:"Exo 2",sans-serif;
-  font-weight:500;
-  font-size:clamp(0.72rem, 2.5vw, 1.02rem);
-  letter-spacing:0.48em;
-  text-indent:0.48em;
+  font-family:"Michroma","Exo 2",sans-serif;
+  font-weight:400;
+  font-size:clamp(0.58rem, 2.05vw, 0.9rem);
+  letter-spacing:0.32em;
+  text-indent:0.32em;
   text-transform:uppercase;
   color:rgba(244,246,248,.78);
   margin-top:1.15em;
@@ -186,10 +195,10 @@ main{position:relative;z-index:3;}
   margin:1.15rem auto 1.05rem;
 }
 .tag{
-  font-family:"Exo 2",sans-serif;
+  font-family:"Michroma","Exo 2",sans-serif;
   font-weight:400;
-  font-size:clamp(0.62rem, 2.1vw, 0.82rem);
-  letter-spacing:0.26em;
+  font-size:clamp(0.52rem, 1.8vw, 0.7rem);
+  letter-spacing:0.18em;
   text-indent:0.1em;
   text-transform:uppercase;
   color:var(--muted);
@@ -209,10 +218,10 @@ main{position:relative;z-index:3;}
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  font-family:"Exo 2",sans-serif;
-  font-weight:600;
-  font-size:0.82rem;
-  letter-spacing:0.14em;
+  font-family:"Michroma","Exo 2",sans-serif;
+  font-weight:400;
+  font-size:0.7rem;
+  letter-spacing:0.10em;
   text-transform:uppercase;
   text-decoration:none;
   text-indent:0.08em;
@@ -249,11 +258,11 @@ main{position:relative;z-index:3;}
   width:100%;
 }
 .block h2{
-  font-family:"Exo 2",sans-serif;
-  font-weight:650;
-  font-size:clamp(1.05rem, 3.6vw, 1.55rem);
-  letter-spacing:0.32em;
-  text-indent:0.32em;
+  font-family:"Michroma","Exo 2",sans-serif;
+  font-weight:400;
+  font-size:clamp(0.88rem, 3.0vw, 1.28rem);
+  letter-spacing:0.22em;
+  text-indent:0.22em;
   text-transform:uppercase;
   color:#fff;
   margin-bottom:0.85rem;
@@ -279,11 +288,11 @@ main{position:relative;z-index:3;}
   padding: 3.2rem var(--pad) calc(2.6rem + env(safe-area-inset-bottom));
 }
 .contact .company{
-  font-family:"Exo 2",sans-serif;
-  font-weight:600;
-  font-size:0.78rem;
-  letter-spacing:0.28em;
-  text-indent:0.28em;
+  font-family:"Michroma","Exo 2",sans-serif;
+  font-weight:400;
+  font-size:0.68rem;
+  letter-spacing:0.22em;
+  text-indent:0.22em;
   text-transform:uppercase;
   color:rgba(244,246,248,.88);
   margin-bottom:0.85rem;
@@ -293,10 +302,10 @@ main{position:relative;z-index:3;}
   align-items:center;
   gap:0.5rem;
   color:var(--cyan);
-  font-family:"Exo 2",sans-serif;
-  font-weight:500;
-  font-size:0.92rem;
-  letter-spacing:0.08em;
+  font-family:"Michroma","Exo 2",sans-serif;
+  font-weight:400;
+  font-size:0.82rem;
+  letter-spacing:0.06em;
   min-height:44px;
 }
 .x-link svg{flex:none;width:14px;height:14px}
@@ -367,7 +376,7 @@ main{position:relative;z-index:3;}
   .hero{padding-bottom:4rem}
 }
 @media (min-width:1100px){
-  .wordmark{letter-spacing:.055em}
+  .wordmark img{width:min(80vw, 38rem)}
   .moon-wrap{left:-18%; bottom:-34%; width:min(130vh, 1680px)}
 }
 
@@ -375,6 +384,56 @@ main{position:relative;z-index:3;}
 @media (max-height:520px) and (orientation:landscape){
   .hero{min-height:0;padding-top:4.2rem;padding-bottom:2rem}
   .ctas{flex-direction:row;width:auto}
+}
+
+/* X banner / poster mode: ?banner=1  (no CTAs, no language toggle) */
+body.banner-mode .topbar,
+body.banner-mode .ctas,
+body.banner-mode .blocks,
+body.banner-mode .contact{
+  display:none !important;
+}
+body.banner-mode{
+  overflow:hidden;
+  width:100vw;
+  height:100vh;
+}
+body.banner-mode .hero{
+  min-height:100vh;
+  height:100vh;
+  /* Keep wordmark + tagline clear of X's bottom-left avatar
+     (≈ left 0–400px, bottom 200px on a 1500×500 banner). */
+  padding: 10vh 8vw 24vh 20vw;
+  justify-content:center;
+  align-items:center;
+}
+body.banner-mode .wordmark img{
+  width:min(50vw, 1500px);
+}
+body.banner-mode .sub{
+  font-size:2.15vw;
+  letter-spacing:0.36em;
+  text-indent:0.36em;
+  margin-top:1.4em;
+}
+body.banner-mode .tag{
+  font-size:1.4vw;
+  letter-spacing:0.22em;
+  white-space:nowrap;
+  max-width:none;
+}
+body.banner-mode .rule{
+  width:4.5vw;
+  margin:1.35rem auto 1.2rem;
+}
+body.banner-mode .reveal{
+  opacity:1 !important;
+  transform:none !important;
+  animation:none !important;
+}
+body.banner-mode .stars,
+body.banner-mode .moon-wrap{
+  transform:none !important;
 }
 </style>
 </head>
@@ -400,7 +459,7 @@ main{position:relative;z-index:3;}
 
   <main>
     <header class="hero">
-      <h1 class="wordmark reveal d1">SmallStep.</h1>
+      <h1 class="wordmark reveal d1"><img src="wordmark.png" alt="SmallStep." width="951" height="168"></h1>
       <p class="sub reveal d2" data-i="sub">Lunar Frontier</p>
       <hr class="rule reveal d3">
       <p class="tag reveal d4" data-i="tag">From an idea to a lunar civilization</p>
@@ -450,6 +509,13 @@ main{position:relative;z-index:3;}
 <script src="../contact-config.js"></script>
 <script>
 (function(){
+  var isBanner = false;
+  try {
+    var _q = (location.search || "") + (location.hash || "");
+    isBanner = /(?:\?|&|#)banner(?:=|&|#|$)/.test(_q) || location.search === "?banner" || location.hash === "#banner";
+  } catch(e){}
+  if (isBanner) document.body.classList.add("banner-mode");
+
   var I18N = {
     en: {
       title: "SmallStep. – Lunar Frontier",
@@ -550,7 +616,7 @@ main{position:relative;z-index:3;}
     if (stars) stars.style.transform = "translate(" + (sx * 6) + "px," + (y * 0.06 + sy * 5) + "px)";
     requestAnimationFrame(tick);
   }
-  if (!reduce) {
+  if (!reduce && !isBanner) {
     requestAnimationFrame(tick);
     window.addEventListener("mousemove", function(e){
       if (window.innerWidth < 700) return;
