@@ -1,11 +1,11 @@
-/* SmallStep. service worker — v0.9.7
+/* SmallStep. service worker — v0.9.8
    Network-first for the app shell (index.html and /start/) so a new
    deploy shows up on the next visit. Cache-on-first-use for tex/,
    models/, walk/, audio/, fonts/, draco/, icons/ and start/ assets.
    Relative URLs so this works on GitHub Pages at
    /holdi-kolonia-kalkulator/ and on a local server.
 */
-const VERSION = "smallstep-v0.9.7";
+const VERSION = "smallstep-v0.9.8";
 const PRECACHE = [
   "./index.html",
   "./start/",

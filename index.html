@@ -636,7 +636,7 @@ body{
 }
 
 /* ===== shared chamfer + hairline ===== */
-.btn, .seg button, .cargo-tab, #fsBtn, #sfxBtn, #musBtn, #srcBtn, #dateNow, #heatPlay,
+.btn, .seg button, .cargo-tab, #fsBtn, #sfxBtn, #musBtn, #srcBtn, #fbOpen, #dateNow, #heatPlay,
 .cargo-filters .btn, .cargo-step .btn, .cargo-use{
   text-transform:uppercase;
   letter-spacing:.08em;
@@ -1551,7 +1551,7 @@ a:hover{text-decoration-color:var(--accent-2)}
    clip-path (box-shadow would be clipped). Dark ink on the fill keeps labels
    readable. #gMenuBtn stays position:absolute — do not set it relative. */
 .btn, .seg button, .cargo-tab, .cargo-use, .cargo-add, .cargo-rm, .cargo-chip,
-#fsBtn, #sfxBtn, #musBtn, #srcBtn, #dateNow, #heatPlay, #mBar button,
+#fsBtn, #sfxBtn, #musBtn, #srcBtn, #fbOpen, #dateNow, #heatPlay, #mBar button,
 .cat>summary, .acc>summary, .walk-btn, #walkOpen{
   position:relative;
   transition:background-color .28s ease, color .28s ease, border-color .28s ease, filter .32s ease, transform .12s ease;
@@ -1561,12 +1561,12 @@ a:hover{text-decoration-color:var(--accent-2)}
 
 .btn.is-press, .seg button.is-press, .cargo-tab.is-press, .cargo-use.is-press,
 .cargo-add.is-press, .cargo-rm.is-press, .cargo-chip.is-press,
-#fsBtn.is-press, #sfxBtn.is-press, #xBtn.is-press, #musBtn.is-press, #srcBtn.is-press,
+#fsBtn.is-press, #sfxBtn.is-press, #xBtn.is-press, #musBtn.is-press, #srcBtn.is-press, #fbOpen.is-press,
 #dateNow.is-press, #heatPlay.is-press, #gMenuBtn.is-press, #mBar button.is-press,
 .cat>summary.is-press, .acc>summary.is-press, .walk-btn.is-press, #walkOpen.is-press,
 .btn:active, .seg button:active, .cargo-tab:active, .cargo-use:active,
 .cargo-add:active, .cargo-rm:active, .cargo-chip:active,
-#fsBtn:active, #sfxBtn:active, #xBtn:active, #musBtn:active, #srcBtn:active,
+#fsBtn:active, #sfxBtn:active, #xBtn:active, #musBtn:active, #srcBtn:active, #fbOpen:active,
 #dateNow:active, #heatPlay:active, #gMenuBtn:active, #mBar button:active,
 .cat>summary:active, .acc>summary:active, .walk-btn:active, #walkOpen:active{
   /* Snap on (no transition) so the flash is immediate; fade is the base transition once the class drops. */
@@ -1653,14 +1653,14 @@ a:hover{text-decoration-color:var(--accent-2)}
   .hud-rings .spin, .hud-scan{animation:none}
   .press-sweep{display:none !important; animation:none !important}
   .btn, .seg button, .cargo-tab, .cargo-use, .cargo-add, .cargo-rm, .cargo-chip,
-  #fsBtn, #sfxBtn, #musBtn, #srcBtn, #dateNow, #heatPlay, #mBar button,
+  #fsBtn, #sfxBtn, #musBtn, #srcBtn, #fbOpen, #dateNow, #heatPlay, #mBar button,
   .cat>summary, .acc>summary, .walk-btn, #walkOpen{
     transition:background-color .1s ease, color .1s ease, border-color .1s ease, filter .12s ease;
   }
   .is-press, .is-press-reduce,
   .btn:active, .seg button:active, .cargo-tab:active, .cargo-use:active,
   .cargo-add:active, .cargo-rm:active,
-  #fsBtn:active, #sfxBtn:active, #xBtn:active, #musBtn:active, #srcBtn:active,
+  #fsBtn:active, #sfxBtn:active, #xBtn:active, #musBtn:active, #srcBtn:active, #fbOpen:active,
   #dateNow:active, #heatPlay:active, #gMenuBtn:active, #mBar button:active,
   .cat>summary:active, .acc>summary:active, .walk-btn:active, #walkOpen:active{
     transform:none;
@@ -1716,15 +1716,6 @@ a:hover{text-decoration-color:var(--accent-2)}
 }
 
 /* v0.9.7: Feedback / Visszajelzés */
-#gTools .fb-open{
-  display:flex; align-items:center; justify-content:center; gap:8px;
-  width:100%; min-height:32px; padding:6px 10px;
-  font-family:var(--font-mono); font-size:calc(10px * var(--fs)); letter-spacing:.14em; text-transform:uppercase;
-  color:var(--accent); border:1px solid var(--accent);
-  background:rgba(10,13,16,.78);
-}
-#gTools .fb-open:hover{background:rgba(191,244,255,.08); color:#f3fdff}
-#gTools .fb-open svg{width:15px; height:15px; fill:none; stroke:currentColor; stroke-width:1.4; flex:none}
 .fb-card{max-width:620px}
 .fb-welcome{
   margin:0 0 14px; padding:12px 14px;
@@ -1790,6 +1781,23 @@ a:hover{text-decoration-color:var(--accent-2)}
 }
 @media (prefers-reduced-motion:reduce){
   .fb-moon, .fb-moon.lit .fb-moon-ico{transition:none; animation:none}
+}
+
+/* v0.9.8: Feedback button in the header next to Sources. Phones get a moon icon
+   (same square as the X button) so the header stays on one row. */
+#fbOpen .fb-ico{display:none; width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.5}
+@media (max-width:480px){
+  #fbOpen{min-width:40px; min-height:40px; padding:8px; line-height:0; display:inline-flex; align-items:center; justify-content:center}
+  #fbOpen .fb-lbl{display:none}
+  #fbOpen .fb-ico{display:block}
+}
+/* v0.9.8: the extra header button must not push the clock onto two rows on
+   1280–1700 px screens: let the long subtitle wrap instead, tighten gaps. */
+@media (min-width:861px) and (max-width:1700px){
+  header{column-gap:16px}
+  header .brand{min-width:0}
+  header .tag{max-width:470px}
+  .hdr-actions{gap:6px}
 }
 
 /* v0.9.2 first-person walk — Arctic HUD, does not alter the rest of the page */
@@ -2097,7 +2105,7 @@ body.walk-mobile #walkHUD{ top: 40px; }
 </style>
 </head><body>
 <header>
- <div class="brand"><h1 data-i18n="h1" data-i18n-html><img class="brand-mark" src="icons/smallstep-wordmark.png" alt="SmallStep." width="951" height="168"> <span class="brand-rest">– Új határok a Holdon</span></h1><div class="tag" data-i18n="tag">Holdi kolónia-kalkulátor · v0.9.7 · forrásolt becslés, nem mérnöki terv</div></div>
+ <div class="brand"><h1 data-i18n="h1" data-i18n-html><img class="brand-mark" src="icons/smallstep-wordmark.png" alt="SmallStep." width="951" height="168"> <span class="brand-rest">– Új határok a Holdon</span></h1><div class="tag" data-i18n="tag">Holdi kolónia-kalkulátor · v0.9.8 · forrásolt becslés, nem mérnöki terv</div></div>
  <div class="clock" id="clockBox">
   <span class="led" id="clockLive" data-i18n-title="clockLive" title="Élő idő"></span>
   <label class="sr" for="datePick" data-i18n="dateLbl">Időpont</label>
@@ -2109,6 +2117,7 @@ body.walk-mobile #walkHUD{ top: 40px; }
  </div>
  <div class="hdr-actions">
   <button type="button" class="btn glow" id="srcBtn" data-i18n="srcBtn">Források</button>
+  <button type="button" class="btn glow" id="fbOpen" data-i18n-aria="fbOpenAria" data-i18n-title="fbBtn" aria-label="Visszajelzés és értékelés" title="Visszajelzés" aria-haspopup="dialog"><span class="fb-lbl" data-i18n="fbBtn">Visszajelzés</span><svg class="fb-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="9" cy="10" r="1.8"/><circle cx="14.6" cy="14.2" r="2.2"/></svg></button>
   <a class="btn" id="xBtn" href="https://x.com/SmallStepLunar" target="_blank" rel="noopener" aria-label="SmallStep. on X" title="SmallStep. on X">
    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.727-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
   </a>
@@ -2155,7 +2164,6 @@ body.walk-mobile #walkHUD{ top: 40px; }
     <div class="seg" id="exagSeg"><button data-v="1" class="on" data-i18n="exag1">Valós domborzat</button><button data-v="10" data-i18n="exag10">10× domborzat</button></div>
     <div class="seg" id="lightSeg"><button data-v="side" class="on" data-i18n="lightSide">Súroló fény</button><button data-v="flat" data-i18n="lightFlat">Egyenletes</button></div>
     <div class="seg" id="polarSeg"><button data-v="0" class="on" data-i18n="polarOff">Globusz</button><button data-v="1" data-i18n="polarOn">+ Pólus-térkép</button></div>
-    <button type="button" class="btn fb-open" id="fbOpen" data-i18n-aria="fbOpenAria" aria-label="Visszajelzés"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="9" cy="10" r="1.8"/><circle cx="14.6" cy="14.2" r="2.2"/></svg><span data-i18n="fbBtn">Visszajelzés</span></button>
    </div>
    <div id="polar"><div class="ttl" data-i18n="polarTtl">Déli sarkvidék, 80° D-ig · LOLA domborzat, sztereografikus</div><img id="polarImg" data-i18n-alt="polarAlt" alt="Déli sarkvidék"><svg id="polarSvg" viewBox="0 0 700 700"></svg></div>
    <div class="overlay" id="gRead" data-i18n="gReadHintMouse">Mutass a Holdra a koordinátákért.</div>
@@ -2284,7 +2292,7 @@ body.walk-mobile #walkHUD{ top: 40px; }
  </aside>
 </div>
 
-<footer><span data-i18n="footerL">Holdi kolónia-kalkulátor · v0.9.7 · Shepherd Invest Kft.</span><span data-i18n="footerR">Felszíni adatok: NASA/GSFC/ASU, LRO</span></footer>
+<footer><span data-i18n="footerL">Holdi kolónia-kalkulátor · v0.9.8 · Shepherd Invest Kft.</span><span data-i18n="footerR">Felszíni adatok: NASA/GSFC/ASU, LRO</span></footer>
 <div id="tip"></div>
 <div id="ksTip" hidden role="tooltip"></div>
 <div id="mBar"><div class="mBarMain"><div id="mBarTxt"></div><div id="mBarCargo" hidden></div></div><button type="button" id="mBarBtn" data-i18n="mBarBtn">Részletek ↓</button></div>
@@ -3811,8 +3819,8 @@ function setLang(lang, opts){
 // ---------- UI STRINGS ----------
 _i("title", "SmallStep. – Új határok a Holdon · Holdi kolónia-kalkulátor", "SmallStep. – Lunar Frontier · Lunar Colony Calculator");
 _i("h1", "<img class=\"brand-mark\" src=\"icons/smallstep-wordmark.png\" alt=\"SmallStep.\" width=\"951\" height=\"168\"> <span class=\"brand-rest\">– Új határok a Holdon</span>", "<img class=\"brand-mark\" src=\"icons/smallstep-wordmark.png\" alt=\"SmallStep.\" width=\"951\" height=\"168\"> <span class=\"brand-rest\">– Lunar Frontier</span>");
-_i("tag", "Holdi kolónia-kalkulátor · v0.9.7 · forrásolt becslés, nem mérnöki terv", "Lunar Colony Calculator · v0.9.7 · sourced estimate, not an engineering design");
-_i("footerL", "Holdi kolónia-kalkulátor · v0.9.7 · Shepherd Invest Kft.", "Lunar Colony Calculator · v0.9.7 · Shepherd Invest Kft.");
+_i("tag", "Holdi kolónia-kalkulátor · v0.9.8 · forrásolt becslés, nem mérnöki terv", "Lunar Colony Calculator · v0.9.8 · sourced estimate, not an engineering design");
+_i("footerL", "Holdi kolónia-kalkulátor · v0.9.8 · Shepherd Invest Kft.", "Lunar Colony Calculator · v0.9.8 · Shepherd Invest Kft.");
 _i("footerR", "Felszíni adatok: NASA/GSFC/ASU, LRO", "Surface data: NASA/GSFC/ASU, LRO");
 _i("srcBtn", "Források", "Sources");
 _i("srcH", "Források", "Sources");
@@ -4731,7 +4739,7 @@ _i("compOrb", (fe, ti) => LANG==="hu"
     (fe, ti) => `From orbit (Lunar Prospector GRS, Prettyman 2006, 2° pixels, ~150 km average): FeO ${fe}% / TiO₂ ${ti}%. For comparison only; the calculation uses the Apollo sample.`);
 
 
-/* v0.9.7 walk */
+/* v0.9.8 walk */
 _i("walkTitle", "Séta a bázison", "Walk the base");
 _i("walkLaunchHint", "Nyiss egy 1:1 léptékű, első személyű 3D nézetet az Összekötő gerincen (déli sarkvidék). A kijelölt rakomány a kiindulópont mellé kerül.", "Open a 1:1 first-person 3D view on Connecting Ridge (lunar south pole). Your selected cargo is placed near the starting point.");
 _i("walkExit", "Kilépés", "Exit");
@@ -4759,7 +4767,7 @@ _i("walkDefaultNote", (n) => LANG==="hu"
     : `The globe has ${n} selected; the 5 m LOLA crop is for Connecting Ridge, so the walk is there.`,
     (n) => `The globe has ${n} selected; the 5 m LOLA crop is for Connecting Ridge, so the walk is there.`);
 
-/* v0.9.7 feedback */
+/* v0.9.8 feedback */
 _i("fbBtn", "Visszajelzés", "Feedback");
 _i("fbOpenAria", "Visszajelzés és értékelés", "Feedback and rating");
 _i("fbH", "Visszajelzés", "Feedback");
